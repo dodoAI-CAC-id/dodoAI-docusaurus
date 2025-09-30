@@ -1,0 +1,349 @@
+openapi: 3.0.0
+info:
+  version: "1.0.5"
+  title: "feature-1 API"
+  description: "API for managing the lifecycle of Verifiable Credentials (VCs) and Decentralized Identifiers (DIDs) with operations for registration, verification, updates, deactivation, and Zero-Knowledge Proof (ZKP) support."
+servers:
+  - url: "https://yourapi.example.com/api/v1"
+
+paths:
+  /dids:
+    post:
+      summary: "Register a new DID"
+      description: "Endpoint for registering a new Decentralized Identifier (DID) with the DID Index Chain."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DIDRegistrationRequest'
+      responses:
+        "200":
+          description: "DID successfully registered"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DIDDocument'
+
+  /did-documents:
+    post:
+      summary: "Create a new DID Document"
+      description: "Endpoint for creating a new DID Document."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DIDDocumentCreationRequest'
+      responses:
+        "200":
+          description: "DID Document successfully created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DIDDocument'
+
+  /did-documents/{didId}:
+    delete:
+      summary: "Delete a DID Document"
+      description: "Endpoint for deleting an existing DID Document."
+      parameters:
+        - name: didId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "The ID of the DID Document to delete."
+      responses:
+        "200":
+          description: "DID Document successfully deleted"
+
+  /credentials:
+    post:
+      summary: "Create a Verifiable Credential"
+      description: "Endpoint for creating a new Verifiable Credential."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifiableCredentialCreationRequest'
+      responses:
+        "200":
+          description: "Verifiable Credential successfully created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifiableCredential'
+
+  /credentials/{credentialId}:
+    get:
+      summary: "Retrieve a Verifiable Credential"
+      description: "Endpoint to retrieve an existing Verifiable Credential."
+      parameters:
+        - name: credentialId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "The ID of the Verifiable Credential to retrieve."
+      responses:
+        "200":
+          description: "Verifiable Credential successfully retrieved"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifiableCredential'
+
+    put:
+      summary: "Update a Verifiable Credential"
+      description: "Endpoint for updating an existing Verifiable Credential."
+      parameters:
+        - name: credentialId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "The ID of the Verifiable Credential to update."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifiableCredentialUpdateRequest'
+      responses:
+        "200":
+          description: "Verifiable Credential successfully updated"
+
+    delete:
+      summary: "Delete a Verifiable Credential"
+      description: "Endpoint for deleting an existing Verifiable Credential."
+      parameters:
+        - name: credentialId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "The ID of the Verifiable Credential to delete."
+      responses:
+        "200":
+          description: "Verifiable Credential successfully deleted"
+
+  /credentials/{credentialId}/verify:
+    post:
+      summary: "Verify a Verifiable Credential"
+      description: "Endpoint to verify the authenticity and validity of a Verifiable Credential."
+      parameters:
+        - name: credentialId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "The ID of the Verifiable Credential to verify."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifiableCredentialVerificationRequest'
+      responses:
+        "200":
+          description: "Verifiable Credential successfully verified"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  verified:
+                    type: boolean
+                  message:
+                    type: string
+
+  /zkp:
+    post:
+      summary: "Generate Zero-Knowledge Proof"
+      description: "Endpoint to generate a Zero-Knowledge Proof for a Verifiable Credential."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateZKPRequest'
+      responses:
+        "200":
+          description: "Zero-Knowledge Proof successfully generated"
+
+  /zkp/{zkpId}:
+    delete:
+      summary: "Deactivate Zero-Knowledge Proof"
+      description: "Endpoint to deactivate a Zero-Knowledge Proof for a Verifiable Credential."
+      parameters:
+        - name: zkpId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "The ID of the Zero-Knowledge Proof to deactivate."
+      responses:
+        "200":
+          description: "Zero-Knowledge Proof successfully deactivated"
+
+  /presentations:
+    post:
+      summary: "Request a Verifiable Presentation"
+      description: "Endpoint for requesting a Verifiable Presentation from the holder."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PresentationRequest'
+      responses:
+        "200":
+          description: "Presentation request successfully processed"
+
+  /presentations/{presentationId}:
+    patch:
+      summary: "Verify a Verifiable Presentation"
+      description: "Endpoint for verifying a presented Verifiable Presentation."
+      parameters:
+        - name: presentationId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "The ID of the Verifiable Presentation to verify."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PresentationVerificationRequest'
+      responses:
+        "200":
+          description: "Presentation successfully verified"
+
+components:
+  schemas:
+    VerifiableCredential:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        issuerId:
+          type: "string"
+        holderId:
+          type: "string"
+        claims:
+          type: "object"
+      required:
+        - id
+        - issuerId
+        - holderId
+
+    DIDDocument:
+      type: "object"
+      properties:
+        didId:
+          type: "string"
+        publicKey:
+          type: "array"
+          items:
+            type: "string"
+        serviceEndpoints:
+          type: "array"
+          items:
+            type: "string"
+      required:
+        - didId
+
+    DIDRegistrationRequest:
+      type: "object"
+      properties:
+        publicKey:
+          type: "array"
+          items:
+            type: "string"
+        serviceEndpoints:
+          type: "array"
+          items:
+            type: "string"
+      required:
+        - publicKey
+
+    DIDDocumentCreationRequest:
+      type: "object"
+      properties:
+        didId:
+          type: "string"
+        publicKey:
+          type: "array"
+          items:
+            type: "string"
+        serviceEndpoints:
+          type: "array"
+          items:
+            type: "string"
+      required:
+        - didId
+        - publicKey
+
+    VerifiableCredentialCreationRequest:
+      type: "object"
+      properties:
+        holderId:
+          type: "string"
+        claims:
+          type: "object"
+      required:
+        - holderId
+        - claims
+
+    VerifiableCredentialUpdateRequest:
+      type: "object"
+      properties:
+        updatedClaims:
+          type: "object"
+      required:
+        - updatedClaims
+
+    VerifiableCredentialVerificationRequest:
+      type: "object"
+      properties:
+        verifyParams:
+          type: "object"
+      required:
+        - verifyParams
+
+    GenerateZKPRequest:
+      type: "object"
+      properties:
+        credentialId:
+          type: "string"
+        disclosureClaims:
+          type: "array"
+          items:
+            type: "string"
+      required:
+        - credentialId
+        - disclosureClaims
+
+    DeactivateZKPRequest:
+      type: "object"
+      properties:
+        zkpId:
+          type: "string"
+      required:
+        - zkpId
+
+    PresentationRequest:
+      type: "object"
+      properties:
+        verifierId:
+          type: "string"
+        requestedClaims:
+          type: "array"
+          items:
+            type: "string"
+      required:
+        - verifierId
+
+    PresentationVerificationRequest:
+      type: "object"
+      properties:
+        verificationData:
+          type: "object"
+      required:
+        - verificationData

@@ -1,0 +1,46 @@
+{
+  "version.label": {
+    "message": "Tiếp Theo",
+    "description": "Nhãn cho phiên bản hiện tại"
+  },
+  "sidebar.tutorialSidebar.doc.Introduction": {
+    "message": "Giới Thiệu",
+    "description": "Nhãn cho mục tài liệu Giới Thiệu trong thanh bên tutorialSidebar, liên kết đến chỉ mục tài liệu"
+  },
+  "sidebar.tutorialSidebar.category.Overview": {
+    "message": "Tổng Quan",
+    "description": "Nhãn cho danh mục Tổng Quan trong thanh bên tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Features": {
+    "message": "Tính Năng",
+    "description": "Nhãn cho danh mục Tính Năng trong thanh bên tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Feature1": {
+    "message": "Tính Năng 1",
+    "description": "Nhãn cho danh mục Tính Năng 1 trong thanh bên tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Specification": {
+    "message": "Thông Số",
+    "description": "Nhãn cho danh mục Thông Số trong thanh bên tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Design": {
+    "message": "Thiết Kế",
+    "description": "Nhãn cho danh mục Thiết Kế trong thanh bên tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Develop": {
+    "message": "Phát Triển",
+    "description": "Nhãn cho danh mục Phát Triển trong thanh bên tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Backend": {
+    "message": "Phần Mềm Phía Sau",
+    "description": "Nhãn cho danh mục Phần Mềm Phía Sau trong thanh bên tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Frontend": {
+    "message": "Phần Mềm Phía Trước",
+    "description": "Nhãn cho danh mục Phần Mềm Phía Trước trong thanh bên tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Test": {
+    "message": "Kiểm Thử",
+    "description": "Nhãn cho danh mục Kiểm Thử trong thanh bên tutorialSidebar"
+  }
+}

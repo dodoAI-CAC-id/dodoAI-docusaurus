@@ -1,0 +1,46 @@
+{
+  "version.label": {
+    "message": "最新",
+    "description": "現在のバージョンのラベル"
+  },
+  "sidebar.tutorialSidebar.doc.Introduction": {
+    "message": "イントロダクション",
+    "description": "サイドバーtutorialSidebarでのドキュメント項目Introductionのラベル (doc indexにリンク)"
+  },
+  "sidebar.tutorialSidebar.category.Overview": {
+    "message": "概要",
+    "description": "サイドバーtutorialSidebarでのカテゴリOverviewのラベル"
+  },
+  "sidebar.tutorialSidebar.category.Features": {
+    "message": "機能",
+    "description": "サイドバーtutorialSidebarでのカテゴリFeaturesのラベル"
+  },
+  "sidebar.tutorialSidebar.category.Feature1": {
+    "message": "機能 1",
+    "description": "サイドバーtutorialSidebarでのカテゴリFeature1のラベル"
+  },
+  "sidebar.tutorialSidebar.category.Specification": {
+    "message": "要件",
+    "description": "サイドバーtutorialSidebarでのカテゴリSpecificationのラベル"
+  },
+  "sidebar.tutorialSidebar.category.Design": {
+    "message": "設計",
+    "description": "サイドバーtutorialSidebarでのカテゴリDesignのラベル"
+  },
+  "sidebar.tutorialSidebar.category.Develop": {
+    "message": "開発",
+    "description": "サイドバーtutorialSidebarでのカテゴリDevelopのラベル"
+  },
+  "sidebar.tutorialSidebar.category.Backend": {
+    "message": "バックエンド",
+    "description": "サイドバーtutorialSidebarでのカテゴリBackendのラベル"
+  },
+  "sidebar.tutorialSidebar.category.Frontend": {
+    "message": "フロントエンド",
+    "description": "サイドバーtutorialSidebarでのカテゴリFrontendのラベル"
+  },
+  "sidebar.tutorialSidebar.category.Test": {
+    "message": "テスト",
+    "description": "サイドバーtutorialSidebarでのカテゴリTestのラベル"
+  }
+}

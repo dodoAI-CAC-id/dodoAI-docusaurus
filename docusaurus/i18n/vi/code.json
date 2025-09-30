@@ -1,0 +1,313 @@
+{
+  "theme.ErrorPageContent.title": {
+    "message": "Trang này đã gặp lỗi.",
+    "description": "Tiêu đề của trang dự phòng khi trang gặp sự cố"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "Trở lại đầu trang",
+    "description": "Nhãn ARIA cho nút trở về đầu trang"
+  },
+  "theme.blog.archive.title": {
+    "message": "Lưu trữ",
+    "description": "Tiêu đề trang & hero của trang lưu trữ blog"
+  },
+  "theme.blog.archive.description": {
+    "message": "Lưu trữ",
+    "description": "Mô tả trang & hero của trang lưu trữ blog"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "Thanh điều hướng của trang danh sách bài viết",
+    "description": "Nhãn ARIA cho phân trang của blog"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "Bài mới hơn",
+    "description": "Nhãn được sử dụng để chuyển đến trang bài blog mới hơn (trang trước)"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "Bài cũ hơn",
+    "description": "Nhãn được sử dụng để chuyển đến trang bài blog cũ hơn (trang kế tiếp)"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "Thanh điều hướng của trang bài viết",
+    "description": "Nhãn ARIA cho phân trang của bài blog"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "Bài mới hơn",
+    "description": "Nhãn nút bài blog để chuyển đến bài mới hơn/trước đó"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "Bài cũ hơn",
+    "description": "Nhãn nút bài blog để chuyển đến bài cũ hơn/tiếp theo"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "Xem tất cả thẻ",
+    "description": "Nhãn của liên kết đến trang danh sách thẻ"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "Chuyển đổi chế độ sáng và tối (hiện tại là {mode})",
+    "description": "Nhãn ARIA cho nút chuyển chế độ màu trên thanh điều hướng"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "chế độ tối",
+    "description": "Tên cho chế độ màu tối"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "chế độ sáng",
+    "description": "Tên cho chế độ màu sáng"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "Liên kết điều hướng",
+    "description": "Nhãn ARIA cho liên kết điều hướng breadcrumb"
+  },
+  "theme.docs.DocCard.categoryDescription.plurals": {
+    "message": "{count} mục",
+    "description": "Mô tả mặc định cho một thẻ danh mục trong mục lục được tạo, về số lượng mục mà danh mục này chứa"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "Trang tài liệu",
+    "description": "Nhãn ARIA cho phân trang tài liệu"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "Trước",
+    "description": "Nhãn được sử dụng để chuyển đến tài liệu trước đó"
+  },
+  "theme.docs.paginator.next": {
+    "message": "Kế tiếp",
+    "description": "Nhãn được sử dụng để chuyển đến tài liệu kế tiếp"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "{count} tài liệu đã gắn thẻ",
+    "description": "Nhãn số lượng tài liệu đã được gắn thẻ. Sử dụng các dạng số nhiều (phân tách bằng \"|\") như ngôn ngữ của bạn hỗ trợ (xem https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.tagDocListPageTitle": {
+    "message": "{nDocsTagged} được gắn thẻ \"{tagName}\"",
+    "description": "Tiêu đề của trang dành cho một thẻ tài liệu"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "Phiên bản: {versionLabel}"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "Đây là tài liệu chưa được phát hành chính thức của {siteTitle} phiên bản {versionLabel}.",
+    "description": "Nhãn được sử dụng để thông báo cho người dùng rằng họ đang xem một phiên bản tài liệu chưa được phát hành"
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "Đây là tài liệu của {siteTitle} {versionLabel}, hiện không còn được bảo trì.",
+    "description": "Nhãn được sử dụng để thông báo cho người dùng rằng họ đang xem một phiên bản tài liệu không còn được bảo trì"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "Để xem các cập nhật mới nhất, vui lòng xem phiên bản {latestVersionLink} ({versionLabel}).",
+    "description": "Nhãn được sử dụng để thông báo cho người dùng kiểm tra phiên bản mới nhất"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "phiên bản mới nhất",
+    "description": "Nhãn liên kết cho gợi ý phiên bản mới nhất"
+  },
+  "theme.common.editThisPage": {
+    "message": "Sửa trang này",
+    "description": "Nhãn liên kết để sửa trang hiện tại"
+  },
+  "theme.lastUpdated.atDate": {
+    "message": " vào {date}",
+    "description": "Các từ mô tả ngày trang được cập nhật lần cuối"
+  },
+  "theme.lastUpdated.byUser": {
+    "message": " bởi {user}",
+    "description": "Các từ mô tả ai đã cập nhật trang lần cuối"
+  },
+  "theme.lastUpdated.lastUpdatedAtBy": {
+    "message": "Cập nhật lần cuối{atDate}{byUser}",
+    "description": "Câu văn hiển thị khi nào và bởi ai trang đã được cập nhật lần cuối"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "Đường dẫn trực tiếp đến {heading}",
+    "description": "Tiêu đề cho đường dẫn đến tiêu đề mục"
+  },
+  "theme.NotFound.title": {
+    "message": "Không tìm thấy trang",
+    "description": "Tiêu đề của trang 404"
+  },
+  "theme.navbar.mobileVersionsDropdown.label": {
+    "message": "Phiên bản",
+    "description": "Nhãn của danh sách thả xuống phiên bản trên giao diện di động"
+  },
+  "theme.tags.tagsListLabel": {
+    "message": "Thẻ:",
+    "description": "Nhãn đi kèm danh sách thẻ"
+  },
+  "theme.AnnouncementBar.closeButtonAriaLabel": {
+    "message": "Đóng",
+    "description": "Nhãn ARIA cho nút đóng thanh thông báo"
+  },
+  "theme.admonition.caution": {
+    "message": "cẩn thận",
+    "description": "Nhãn mặc định được sử dụng cho cảnh báo Note (:::caution)"
+  },
+  "theme.admonition.danger": {
+    "message": "cảnh báo",
+    "description": "Nhãn mặc định được sử dụng cho cảnh báo (:::danger)"
+  },
+  "theme.admonition.info": {
+    "message": "thông tin",
+    "description": "Nhãn mặc định được sử dụng cho Note thông tin (:::info)"
+  },
+  "theme.admonition.note": {
+    "message": "ghi chú",
+    "description": "Nhãn mặc định được sử dụng cho cảnh báo Ghi chú (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "mẹo",
+    "description": "Nhãn mặc định được sử dụng cho Mẹo (:::tip)"
+  },
+  "theme.admonition.warning": {
+    "message": "cảnh báo",
+    "description": "Nhãn mặc định được sử dụng cho cảnh báo Warning (:::warning)"
+  },
+  "theme.blog.sidebar.navAriaLabel": {
+    "message": "Điều hướng các bài viết gần đây trên blog",
+    "description": "Nhãn ARIA cho các bài viết gần đây trong sidebar của blog"
+  },
+  "theme.CodeBlock.copied": {
+    "message": "Đã sao chép",
+    "description": "Nhãn của nút đã sao chép trên đoạn mã"
+  },
+  "theme.CodeBlock.copyButtonAriaLabel": {
+    "message": "Sao chép mã vào bộ nhớ tạm",
+    "description": "Nhãn ARIA cho nút sao chép mã"
+  },
+  "theme.CodeBlock.copy": {
+    "message": "Sao chép",
+    "description": "Nhãn của nút sao chép trên đoạn mã"
+  },
+  "theme.CodeBlock.wordWrapToggle": {
+    "message": "Chuyển đổi văn bản xuống dòng",
+    "description": "Thuộc tính tiêu đề cho nút bật/tắt xuống dòng của mã nguồn"
+  },
+  "theme.DocSidebarItem.expandCategoryAriaLabel": {
+    "message": "Xem thêm danh mục '{label}'",
+    "description": "Nhãn ARIA để mở rộng danh mục trong sidebar"
+  },
+  "theme.DocSidebarItem.collapseCategoryAriaLabel": {
+    "message": "Thu gọn danh mục '{label}'",
+    "description": "Nhãn ARIA để thu gọn danh mục trong sidebar"
+  },
+  "theme.NotFound.p1": {
+    "message": "Chúng tôi không thể tìm thấy nội dung bạn đang tìm kiếm.",
+    "description": "Đoạn đầu tiên của trang 404"
+  },
+  "theme.NotFound.p2": {
+    "message": "Vui lòng liên hệ với trang web đã đưa bạn đến đây và thông báo rằng đường dẫn này bị lỗi.",
+    "description": "Đoạn tiếp theo thứ hai của trang 404"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "Thanh điều hướng",
+    "description": "Nhãn ARIA cho điều hướng chính"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "Ngôn ngữ",
+    "description": "Nhãn của danh sách ngôn ngữ thả xuống trên giao diện di động"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "Trên trang này",
+    "description": "Nhãn được sử dụng bởi nút trên thành phần mục lục có thể thu gọn"
+  },
+  "theme.blog.post.readMore": {
+    "message": "Đọc tiếp",
+    "description": "Nhãn được sử dụng trong trích dẫn bài đăng blog để liên kết đến bài đầy đủ"
+  },
+  "theme.blog.post.readMoreLabel": {
+    "message": "Đọc thêm về {title}",
+    "description": "Nhãn ARIA cho liên kết đến bài blog đầy đủ từ trích dẫn"
+  },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "{readingTime} phút để đọc",
+    "description": "Nhãn số nhiều cho \"{readingTime} phút đọc\"."
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "Trang chủ",
+    "description": "Nhãn ARIA cho trang chủ trong breadcrumb"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "Thanh điều hướng tài liệu",
+    "description": "Nhãn ARIA cho thanh điều hướng sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "Thu gọn thanh bên",
+    "description": "Thuộc tính tiêu đề cho nút thu gọn thanh bên"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "Thu gọn thanh bên",
+    "description": "Nhãn ARIA cho nút thu gọn thanh bên"
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "Đóng thanh điều hướng",
+    "description": "Nhãn ARIA cho nút đóng thanh điều hướng trên giao diện di động"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← Trở lại menu chính",
+    "description": "Nhãn của nút quay lại menu chính trong menu phụ sidebar trên giao diện di động"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "Đóng - mở thanh điều hướng",
+    "description": "Nhãn ARIA cho nút menu hamburger trên giao diện di động"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "Mở rộng thanh bên",
+    "description": "Nhãn ARIA và thuộc tính tiêu đề cho nút mở rộng thanh bên"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "Mở rộng thanh bên",
+    "description": "Nhãn ARIA và thuộc tính tiêu đề cho nút mở rộng thanh bên"
+  },
+  "theme.blog.post.plurals": {
+    "message": "{count} bài viết",
+    "description": "Nhãn số nhiều cho \"{count} bài viết\"."
+  },
+  "theme.blog.tagTitle": {
+    "message": "{nPosts} được gắn thẻ \"{tagName}\"",
+    "description": "Tiêu đề của trang dành cho một thẻ blog"
+  },
+  "theme.blog.author.pageTitle": {
+    "message": "{authorName} - {nPosts}",
+    "description": "Tiêu đề của trang dành cho một tác giả blog"
+  },
+  "theme.blog.authorsList.pageTitle": {
+    "message": "Tác giả",
+    "description": "Tiêu đề của trang danh sách tác giả"
+  },
+  "theme.blog.authorsList.viewAll": {
+    "message": "Xem tất cả tác giả",
+    "description": "Nhãn liên kết đến trang danh sách tác giả blog"
+  },
+  "theme.blog.author.noPosts": {
+    "message": "Tác giả này chưa viết bài nào.",
+    "description": "Nội dung hiển thị cho tác giả với 0 bài viết blog"
+  },
+  "theme.contentVisibility.unlistedBanner.title": {
+    "message": "Trang không công khai",
+    "description": "Tiêu đề của biểu tượng trang không công khai"
+  },
+  "theme.contentVisibility.unlistedBanner.message": {
+    "message": "Trang này không công khai. Công cụ tìm kiếm sẽ không đánh chỉ mục trang này và chỉ những ai có liên kết mới có thể truy cập trang.",
+    "description": "Thông báo biểu tượng cho nội dung không công khai"
+  },
+  "theme.contentVisibility.draftBanner.title": {
+    "message": "Trang nháp",
+    "description": "Tiêu đề của biểu tượng trạng thái nháp"
+  },
+  "theme.contentVisibility.draftBanner.message": {
+    "message": "Trang này là bản nháp. Nó chỉ hiển thị trong môi trường phát triển và bị loại khỏi bản sản xuất.",
+    "description": "Thông báo biểu tượng cho trạng thái trang nháp"
+  },
+  "theme.ErrorPageContent.tryAgain": {
+    "message": "Thử lại",
+    "description": "Nhãn của nút thử lại khi ranh giới lỗi React nhận diện lỗi"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "Chuyển tới nội dung chính",
+    "description": "Nhãn bỏ qua đến nội dung chính được sử dụng để hỗ trợ truy cập, cho phép di chuyển nhanh với bàn phím Tab/Enter"
+  },
+  "theme.tags.tagsPageTitle": {
+    "message": "Thẻ",
+    "description": "Tiêu đề của trang danh sách thẻ"
+  }
+}

@@ -1,0 +1,339 @@
+openapi: 3.0.3
+info:
+  title: Microservice API
+  version: 1.0.0
+  description: |
+    API documentation for microservice endpoints, including user management, data operations, and system integration.
+
+servers:
+  - url: http://localhost:8080/api
+    description: Local development server
+  - url: https://api.example.com/v1
+    description: Production server
+
+paths:
+  /users:
+    get:
+      summary: Retrieve list of users
+      tags:
+        - User Management
+      description: Returns a paginated list of users in the system.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number for pagination
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items per page
+      responses:
+        "200":
+          description: Users retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Users retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+        "400":
+          description: Bad request
+        "500":
+          description: Internal server error
+    post:
+      summary: Create a new user
+      tags:
+        - User Management
+      description: Creates a new user account in the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User created successfully
+                  data:
+                    $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request - validation errors
+        "409":
+          description: Conflict - user already exists
+        "500":
+          description: Internal server error
+
+  /users/{userId}:
+    get:
+      summary: Get user by ID
+      tags:
+        - User Management
+      description: Retrieves detailed information about a specific user.
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique identifier of the user
+      responses:
+        "200":
+          description: User details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User details retrieved successfully
+                  data:
+                    $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+        "500":
+          description: Internal server error
+    put:
+      summary: Update user information
+      tags:
+        - User Management
+      description: Updates an existing user's information.
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique identifier of the user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        "200":
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User updated successfully
+                  data:
+                    $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request - validation errors
+        "404":
+          description: User not found
+        "500":
+          description: Internal server error
+    delete:
+      summary: Delete user
+      tags:
+        - User Management
+      description: Removes a user from the system.
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique identifier of the user
+      responses:
+        "200":
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User deleted successfully
+        "404":
+          description: User not found
+        "500":
+          description: Internal server error
+
+  /data/export:
+    get:
+      summary: Export system data
+      tags:
+        - Data Operations
+      description: Exports system data in various formats.
+      parameters:
+        - in: query
+          name: format
+          schema:
+            type: string
+            enum: [json, csv, xml]
+            default: json
+          description: Export format
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          description: Start date for data export
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          description: End date for data export
+      responses:
+        "200":
+          description: Data exported successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Data exported successfully
+                  downloadUrl:
+                    type: string
+                    example: https://api.example.com/downloads/export-123.json
+        "400":
+          description: Bad request - invalid parameters
+        "500":
+          description: Internal server error
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the user
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        email:
+          type: string
+          format: email
+          description: User's email address
+          example: "user@example.com"
+        name:
+          type: string
+          description: User's full name
+          example: "John Doe"
+        role:
+          type: string
+          enum: [admin, user, moderator]
+          description: User's role in the system
+          example: "user"
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the user was created
+          example: "2023-01-15T10:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the user was last updated
+          example: "2023-01-20T14:45:00Z"
+        isActive:
+          type: boolean
+          description: Whether the user account is active
+          example: true
+
+    CreateUserRequest:
+      type: object
+      required:
+        - email
+        - name
+        - role
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email address
+          example: "newuser@example.com"
+        name:
+          type: string
+          description: User's full name
+          example: "Jane Smith"
+        role:
+          type: string
+          enum: [admin, user, moderator]
+          description: User's role in the system
+          example: "user"
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email address
+          example: "updated@example.com"
+        name:
+          type: string
+          description: User's full name
+          example: "Jane Updated"
+        role:
+          type: string
+          enum: [admin, user, moderator]
+          description: User's role in the system
+          example: "moderator"
+        isActive:
+          type: boolean
+          description: Whether the user account is active
+          example: false
+
+    Pagination:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          description: Current page number
+          example: 1
+        totalPages:
+          type: integer
+          description: Total number of pages
+          example: 5
+        totalItems:
+          type: integer
+          description: Total number of items
+          example: 50
+        itemsPerPage:
+          type: integer
+          description: Number of items per page
+          example: 10
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []

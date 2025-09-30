@@ -1,0 +1,70 @@
+{
+  "theme.ErrorPageContent.title": {
+    "message": "エラーが発生しました",
+    "description": "ページがクラッシュしたときのフォールバックページのタイトル"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "先頭へ戻る",
+    "description": "トップに戻るボタンのARIAラベル"
+  },
+  "theme.blog.archive.title": {
+    "message": "アーカイブ",
+    "description": "ブログアーカイブページのヘロタイトルとページタイトル"
+  },
+  "theme.blog.archive.description": {
+    "message": "アーカイブ",
+    "description": "ブログアーカイブページの説明とヘロ説明"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "ブログ記事一覧のナビゲーション",
+    "description": "ブログのページネーションのARIAラベル"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "新しい記事",
+    "description": "新しいブログ投稿ページ（前のページ）へ移動するために使用されるラベル"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "過去の記事",
+    "description": "古いブログ投稿ページ（次のページ）へ移動するために使用されるラベル"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "ブログ記事のナビゲーション",
+    "description": "ブログ投稿のページネーションのARIAラベル"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "新しい記事",
+    "description": "新しい/前の記事に移動するためのブログ投稿ボタンのラベル"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "過去の記事",
+    "description": "古い/次の記事に移動するためのブログ投稿ボタンのラベル"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "全てのタグを見る",
+    "description": "タグリストページをターゲットにしたリンクのラベル"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "ダークモードを切り替える(現在は{mode})",
+    "description": "ナビゲーションバーの配色モード切替のARIAラベル"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "ダークモード",
+    "description": "暗色モードの名前"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "ライトモード",
+    "description": "明色モードの名前"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "パンくずリストのナビゲーション",
+    "description": "パンくずリストのARIAラベル"
+  },
+  "theme.docs.DocCard.categoryDescription.plurals": {
+    "message": "{count}項目",
+    "description": "このカテゴリに含まれる項目の数について生成されたインデックス内カテゴリカードのデフォルトの説明"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "ドキュメントページ",
+    "description": "ドキュメントページのページネーションのARIAラベル"
+  }
+}
