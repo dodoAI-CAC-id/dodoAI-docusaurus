@@ -1,0 +1,123 @@
+name: SSH to EC2 and Deploy Docs
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'develop'
+    paths:
+      - 'docusaurus/**'
+  workflow_dispatch:
+
+env:
+  AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+  EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+  EC2_IP: ${{ vars.EC2_IP }}
+  EC2_SG_ID: ${{ vars.EC2_SG_ID }}
+  DOCS_ECR_REPOSITORY: ${{ vars.DOCS_ECR_REPOSITORY }}
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+  actions: read
+
+jobs:
+  build-and-push:
+    name: Build and Push to ECR
+    runs-on: ubuntu-latest
+    environment:
+      name: docs
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and Tag Docker Image
+        run: |
+          cd ~/docusaurus
+
+          docker build -t ${{ env.DOCS_ECR_REPOSITORY }} .
+          docker tag ${{ env.DOCS_ECR_REPOSITORY }}:latest ${{ steps.login-ecr.outputs.registry }}/${{ env.DOCS_ECR_REPOSITORY }}:latest
+        
+      - name: Push Docker Image to ECR
+        run: |
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.DOCS_ECR_REPOSITORY }}:latest
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: docs
+    needs: build-and-push
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ env.EC2_SSH_KEY }}
+
+      - name: Get runner IP address
+        id: get-publicip
+        run: |
+          MAX_RETRIES=5
+          RETRY_DELAY=3
+          for ((i=1; i<=MAX_RETRIES; i++)); do
+            IP=$(curl -sS ipinfo.io | jq -r '.ip')
+            if [ -n "$IP" ]; then
+              echo "ip=$IP" >> "$GITHUB_OUTPUT"
+              echo "Retrieved IP: $IP"
+              break
+            fi
+            echo "Attempt $i/$MAX_RETRIES failed. Retrying in $RETRY_DELAY seconds..."
+            sleep $RETRY_DELAY
+          done
+          # Check if we failed to get the IP after all retries
+          if [ -z "$IP" ]; then
+            echo "Failed to get the IP address after $MAX_RETRIES attempts" >&2
+            exit 1
+          fi
+
+      - name: Whitelist runner IP address
+        run: |
+          aws ec2 authorize-security-group-ingress \
+            --group-id $EC2_SG_ID \
+            --protocol tcp \
+            --port 22 \
+            --cidr ${{ steps.get-publicip.outputs.ip }}/32
+
+      - name: SSH and Deploy to EC2
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ env.EC2_IP }} bash -s << ENDSSH
+            set -e
+            cd docusaurus
+
+            aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+            docker-compose -f docker-compose.yml pull
+            docker-compose -f docker-compose.yml down
+            docker-compose -f docker-compose.yml up -d
+            docker system prune -af
+
+          ENDSSH
+        shell: bash
+      - name: Revoke runner IP address
+        run: |
+          aws ec2 revoke-security-group-ingress \
+            --group-id $EC2_SG_ID \
+            --protocol tcp \
+            --port 22 \
+            --cidr ${{ steps.get-publicip.outputs.ip }}/32

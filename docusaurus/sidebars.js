@@ -28,6 +28,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Specification',
+      key: 'main-specification',
       items: specification,
     },
     {
@@ -53,6 +54,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Test',
+      key: 'main-test',
       items: test,
     },
   ],

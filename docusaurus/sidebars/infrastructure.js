@@ -2,6 +2,7 @@ module.exports = [
   {
     type: "category",
     label: "Design",
+    key: "infrastructure-design",
     items: [
       "infrastructure/design/architecture-diagram/index",
       "infrastructure/design/infrastructure-networking-design",
@@ -20,6 +21,7 @@ module.exports = [
   {
     type: "category",
     label: "Develop",
+    key: "infrastructure-develop",
     items: [
       "infrastructure/develop/infrastructure-develop-introduction",
       "infrastructure/develop/infrastructure-develop-tooling-setup",
