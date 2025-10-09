@@ -4,9 +4,9 @@
 # instruction
 * We have to implement Frontend interface of communiticating with "Blocking User" API.
 * We already have a API defition for "Blocking User". The API documents are located as following.
-    - CREATE Block: re-action/docs/docs/users/develop/api-design/post-users-targetuserid-block.md
-    - PUT Block: re-action/docs/docs/users/develop/api-design/put-users-targetuserid-block.md
-    - GET Block: re-action/docs/docs/users/develop/api-design/get-users-userid-blocks.md
+    - CREATE Block: xxx/xxx/xxx.md
+    - PUT Block: xxx/xxx/xxx.md
+    - GET Block: xxx/xxx/xxx.md
 * User can excute Blocking feature from user profile page, adding a button to show "Block User" button.
 
 # Target Folders
