@@ -1,0 +1,22 @@
+{
+  "link.title.agentic-dev-framework": {
+    "message": "agentic-dev-framework",
+    "description": "The title of the footer links column with title=agentic-dev-framework in the footer"
+  },
+  "link.title.Links": {
+    "message": "リンク",
+    "description": "The title of the footer links column with title=Links in the footer"
+  },
+  "link.item.label.Guides": {
+    "message": "ガイド",
+    "description": "The label of footer link with label=Guides linking to /"
+  },
+  "link.item.label.agentic-dev-framework": {
+    "message": "agentic-dev-framework",
+    "description": "The label of footer link with label=agentic-dev-framework linking to https://agentic-dev-framework.58llm.link/"
+  },
+  "copyright": {
+    "message": "Copyright © 2025 58, Inc.",
+    "description": "The footer copyright"
+  }
+}

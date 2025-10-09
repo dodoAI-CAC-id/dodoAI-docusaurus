@@ -1,0 +1,282 @@
+{
+  "version.label": {
+    "message": "v0.9.0",
+    "description": "The label for version current"
+  },
+  "sidebar.mySidebar.category.Standard Dev Flow(ADF)": {
+    "message": "標準開発フロー(ADF)",
+    "description": "サイドバーのmySidebar内のStandard Dev Flow(ADF)カテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.Project Management": {
+    "message": "プロジェクト管理",
+    "description": "サイドバーのmySidebar内のProject Managementカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.Development Rules": {
+    "message": "開発規則",
+    "description": "サイドバーのmySidebar内のDevelopment Rulesカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.Specification": {
+    "message": "仕様書",
+    "description": "サイドバーのmySidebar内のSpecificationカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.Design": {
+    "message": "設計",
+    "description": "サイドバーのmySidebar内のDesignカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.Develop": {
+    "message": "開発",
+    "description": "サイドバーのmySidebar内のDevelopカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.CI/CD": {
+    "message": "CI/CD",
+    "description": "サイドバーのmySidebar内のCI/CDカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.Frontend": {
+    "message": "フロントエンド",
+    "description": "サイドバーのmySidebar内のFrontendカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.Backend": {
+    "message": "バックエンド",
+    "description": "サイドバーのmySidebar内のBackendカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.Smart Contract": {
+    "message": "スマートコントラクト",
+    "description": "サイドバーのmySidebar内のSmart Contractカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.Infra": {
+    "message": "インフラ",
+    "description": "サイドバーのmySidebar内のInfraカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.System Test+": {
+    "message": "システムテスト+",
+    "description": "サイドバーのmySidebar内のSystem Test+カテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.Release": {
+    "message": "リリース",
+    "description": "サイドバーのmySidebar内のReleaseカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.How to update Agentic Dev Framework": {
+    "message": "ハンドブックの更新方法",
+    "description": "サイドバーのmySidebar内のHow to update Agentic Dev Frameworkカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.dodoAi User Guide": {
+    "message": "dodoAi ユーザーガイド",
+    "description": "サイドバーのmySidebar内のdodoAi User Guideカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.Template Deploy": {
+    "message": "テンプレート展開",
+    "description": "サイドバーのmySidebar内のTemplate Deployカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.58 Knowledge": {
+    "message": "58ナレッジ",
+    "description": "サイドバーのmySidebar内の58 Knowledgeカテゴリのラベル"
+  },
+  "sidebar.mySidebar.category.Daily Report": {
+    "message": "デイリーレポート",
+    "description": "サイドバーのmySidebar内のDaily Reportカテゴリのラベル"
+  },
+  "sidebar.mySidebar.doc.Introduction": {
+    "message": "はじめに",
+    "description": "サイドバーのmySidebar内のIntroduction文書アイテムのラベル（文書インデックスへのリンク）"
+  },
+  "sidebar.tutorialSidebar.category.Agentic Dev Framework": {
+    "message": "Agentic Dev Framework",
+    "description": "The label for category Agentic Dev Framework in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Specification": {
+    "message": "仕様書",
+    "description": "The label for category Specification in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.System Flows": {
+    "message": "システムフロー",
+    "description": "The label for category System Flows in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Frontend": {
+    "message": "フロントエンド",
+    "description": "The label for category Frontend in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Modular Onion Architecture": {
+    "message": "モジュラーオニオンアーキテクチャ",
+    "description": "The label for category Modular Onion Architecture in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Design": {
+    "message": "設計",
+    "description": "The label for category Design in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Develop": {
+    "message": "開発",
+    "description": "The label for category Develop in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Test": {
+    "message": "テスト",
+    "description": "The label for category Test in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Microservice": {
+    "message": "マイクロサービス",
+    "description": "The label for category Microservice in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Overview": {
+    "message": "概要",
+    "description": "The label for category Overview in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Infrastructure": {
+    "message": "インフラストラクチャ",
+    "description": "The label for category Infrastructure in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.DevOps": {
+    "message": "DevOps",
+    "description": "The label for category DevOps in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Project Management": {
+    "message": "プロジェクト管理",
+    "description": "The label for category Project Management in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Development Rules": {
+    "message": "開発規則",
+    "description": "The label for category Development Rules in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Test": {
+    "message": "テスト",
+    "description": "The label for category Test in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Develop": {
+    "message": "開発",
+    "description": "The label for category Develop in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Design": {
+    "message": "設計",
+    "description": "The label for category Design in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Specification": {
+    "message": "仕様書",
+    "description": "The label for category Specification in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Non-Functional Requirements Overview": {
+    "message": "非機能要件 概要",
+    "description": "The label for document Non-Functional Requirements Overview in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Availability Requirements": {
+    "message": "可用性要件",
+    "description": "The label for document Availability Requirements in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Performance and Scalability Requirements": {
+    "message": "パフォーマンスとスケーラビリティ要件",
+    "description": "The label for document Performance and Scalability Requirements in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Maintainability and Operability Requirements": {
+    "message": "保守性と運用性要件",
+    "description": "The label for document Maintainability and Operability Requirements in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Portability and Migration Requirements": {
+    "message": "移植性と移行要件",
+    "description": "The label for document Portability and Migration Requirements in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Security Requirements": {
+    "message": "セキュリティ要件",
+    "description": "The label for document Security Requirements in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.System Environment and Ecology Requirements": {
+    "message": "システム環境とエコロジー要件",
+    "description": "The label for document System Environment and Ecology Requirements in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Application Architecture": {
+    "message": "アプリケーションアーキテクチャ",
+    "description": "The label for document Application Architecture in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Infrastructure Architecture": {
+    "message": "インフラストラクチャアーキテクチャ",
+    "description": "The label for document Infrastructure Architecture in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Network Architecture": {
+    "message": "ネットワークアーキテクチャ",
+    "description": "The label for document Network Architecture in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Runtime Architecture": {
+    "message": "ランタイムアーキテクチャ",
+    "description": "The label for document Runtime Architecture in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Security Architecture": {
+    "message": "セキュリティアーキテクチャ",
+    "description": "The label for document Security Architecture in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Operational Requirement": {
+    "message": "運用要件",
+    "description": "The label for document Operational Requirement in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Operational Architecture": {
+    "message": "運用アーキテクチャ",
+    "description": "The label for document Operational Architecture in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Dev-Ops Architecture": {
+    "message": "DevOpsアーキテクチャ",
+    "description": "The label for document Dev-Ops Architecture in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Conceptual Data Diagram": {
+    "message": "概念データ図",
+    "description": "The label for document Conceptual Data Diagram in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Detailed Functional Requirements": {
+    "message": "詳細機能要件",
+    "description": "The label for document Detailed Functional Requirements in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Microservice API List": {
+    "message": "マイクロサービス API リスト",
+    "description": "The label for document Microservice API List in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.Microservice Swagger Documentation": {
+    "message": "マイクロサービス Swagger ドキュメント",
+    "description": "The label for document Microservice Swagger Documentation in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.CD Setting": {
+    "message": "CD設定",
+    "description": "The label for document CD Setting in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.CI Setting (API Testing)": {
+    "message": "CI設定（APIテスト）",
+    "description": "The label for document CI Setting (API Testing) in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.CI Setting (Backend/Unit Testing)": {
+    "message": "CI設定（バックエンド/ユニットテスト）",
+    "description": "The label for document CI Setting (Backend/Unit Testing) in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.CI Setting (Frontend/Unit Testing)": {
+    "message": "CI設定（フロントエンド/ユニットテスト）",
+    "description": "The label for document CI Setting (Frontend/Unit Testing) in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.CI": {
+    "message": "CI",
+    "description": "The label for document CI in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.microservice/overview/microservice-business-requirement": {
+    "message": "マイクロサービス ビジネス要件",
+    "description": "The label for document microservice/overview/microservice-business-requirement in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.microservice/overview/microservice-non-functional-requirement": {
+    "message": "マイクロサービス 非機能要件",
+    "description": "The label for document microservice/overview/microservice-non-functional-requirement in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.microservice/overview/microservice-system-requirements": {
+    "message": "マイクロサービス システム要件",
+    "description": "The label for document microservice/overview/microservice-system-requirements in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.microservice/overview/microservice-application-architecture": {
+    "message": "マイクロサービス アプリケーションアーキテクチャ",
+    "description": "The label for document microservice/overview/microservice-application-architecture in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.microservice/overview/microservice-runtime-architecture": {
+    "message": "マイクロサービス ランタイムアーキテクチャ",
+    "description": "The label for document microservice/overview/microservice-runtime-architecture in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.microservice/overview/microservice-conceptual-data-diagram": {
+    "message": "マイクロサービス 概念データ図",
+    "description": "The label for document microservice/overview/microservice-conceptual-data-diagram in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.microservice/overview/microservice-er-diagram": {
+    "message": "マイクロサービス ER図",
+    "description": "The label for document microservice/overview/microservice-er-diagram in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.doc.microservice/overview/microservice-physical-data-diagram": {
+    "message": "マイクロサービス 物理データ図",
+    "description": "The label for document microservice/overview/microservice-physical-data-diagram in sidebar tutorialSidebar"
+  }
+}

@@ -1,0 +1,49 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #2f4892;
+  --ifm-color-primary-dark: #2a4183;
+  --ifm-color-primary-darker: #283d7c;
+  --ifm-color-primary-darkest: #213266;
+  --ifm-color-primary-light: #344fa1;
+  --ifm-color-primary-lighter: #3653a8;
+  --ifm-color-primary-lightest: #3d5ebe;
+  --ifm-footer-link-hover-color: revert;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #a6b3d9;
+  --ifm-color-primary-dark: #8b9cce;
+  --ifm-color-primary-darker: #7e91c8;
+  --ifm-color-primary-darkest: #6b81c0;
+  --ifm-color-primary-light: #c1cae4;
+  --ifm-color-primary-lighter: #ced5ea;
+  --ifm-color-primary-lightest: #f7f8fb;
+  --ifm-background-color: #181a20;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+.swagger-ui .info .title small pre{
+  background-color: transparent !important;
+}
+
+@media print {
+  div[style*="overflow-y: scroll"] {
+    overflow-y: visible !important;
+    height: auto !important;
+  }
+
+  div[style*="width:"] {
+    max-width: 100% !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+}
