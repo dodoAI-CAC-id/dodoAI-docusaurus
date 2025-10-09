@@ -46,7 +46,7 @@ jobs:
 
       - name: Build and Tag Docker Image
         run: |
-          cd ~/docusaurus
+          cd ~/dodoAI-docusaurus
 
           docker build -t ${{ env.DOCS_ECR_REPOSITORY }} .
           docker tag ${{ env.DOCS_ECR_REPOSITORY }}:latest ${{ steps.login-ecr.outputs.registry }}/${{ env.DOCS_ECR_REPOSITORY }}:latest
