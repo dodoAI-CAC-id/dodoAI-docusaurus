@@ -1,130 +1,131 @@
 ---
-id: business-requirement
-title: Business Requirement
+# まもあい（mamoAI）システム ビジネス要件定義書
+
+作成日: 2025年8月21日
+
 ---
 
-# Business Requirement
+## 1. 背景 & 目的
 
-## Overview
+### 1.1 背景  
+急速な高齢化と就労人口の減少により、病院に入院している方や介護施設の入所者を守るための効果的な見守りシステムの需要が高まっています。現状の見守り機器では即座の異常対応や詳細な事後確認の課題が残る中、AI技術を活用した見守りシステムを提供することで、職員の負担軽減と見守られる方の安全性向上を実現します。
 
-This document outlines the business requirements for the dodo AI system, defining the core business objectives, stakeholder needs, and functional requirements that drive the development of the platform.
+### 1.2 ビジネスゴール  
+- 画像認識AIにより、転倒・転落リスクや異常姿勢を確実に検知し通知できる見守りサービスを構築する。
+- 病院や介護施設における職員の業務効率化と入居者・患者の安全確保を両立する。
+- 競争力ある価格と先進性を備え、新たな収益源とする。
 
-## Business Objectives
+---
 
-### Primary Objectives
-- Provide an intelligent AI-powered development framework
-- Enable rapid application development and deployment
-- Support scalable microservices architecture
-- Facilitate team collaboration and project management
+## 2. ステークホルダー
 
-### Secondary Objectives
-- Reduce development time and costs
-- Improve code quality and maintainability
-- Enable continuous integration and deployment
-- Support multiple development frameworks and technologies
+- 事業オーナー、自社CxO、代表取締役
+- HD代表取締役
+- プロダクト責任者
+- 開発部門（自社R&D部門・AIエンジニア、インドネシア開発部隊）
+- 医療機関所属の医師等の共同研究者
+- 看護師、介護スタッフ（メインユーザー）
+- 介護施設・医療機関現場責任者
+- 外部ベンダー
+- 規制当局・コンプライアンス担当
+- エンドユーザー（患者、入居者 ※直接は想定していませんが間接的に影響）
 
-## Stakeholder Requirements
+---
 
-### Development Teams
-- Need intuitive development tools and frameworks
-- Require comprehensive documentation and guidelines
-- Want automated testing and deployment capabilities
-- Need project management and tracking features
+## 3. ビジネス要件（What）
 
-### Project Managers
-- Require visibility into project progress and status
-- Need resource allocation and planning tools
-- Want reporting and analytics capabilities
-- Need risk management and mitigation features
+- 見守り対象者の異常姿勢（転倒・ベッドからの離床など）をカメラ画像のみで即時検知し、通知する。
+- 異常発生時、発生画像（プライバシー保護加工済み）や履歴動画を関係スタッフ間で共有する。
+- 通知後、どのスタッフが誰の対応に向かっているか全員が把握し、効率的な役割分担を可能にする。
+- 異常発生時点の動画と履歴を記録し、後から事後確認や報告用途で利用できる。
+- システム設置・運用コストを抑えながら、既存の類似製品に比べ先進的機能を提供する。
 
-### End Users
-- Expect high-quality, reliable applications
-- Need responsive and intuitive user interfaces
-- Want secure and performant systems
-- Require accessibility and usability features
+---
 
-## Functional Requirements
+## 4. 機能要件（Functional Requirements）
 
-### Core Platform Features
-- AI-powered code generation and assistance
-- Template and component library management
-- Project scaffolding and setup automation
-- Integration with popular development tools
+- AI連携カメラ（物体検知・姿勢推定・転倒検知）による異常検知
+- モザイク（ぼかし）付きの画像/動画による異常発生通知
+- 対応スタッフのアクション登録（誰が現場対応に向かったかを記録・共有）
+- 履歴動画の自動記録と最大5分間分の検索・再生機能
+- 対象者・履歴・スタッフ・異常種別など履歴情報の管理
+- 履歴映像を申し送りや報告書作成用途で簡単に参照できるUI
+- セキュアな本人認証・アクセス管理（スタッフや施設ごと等）
+- モバイル・PCからの通知受信・履歴再生
+- 異常対応後の再監視開始操作
 
-### Development Framework
-- Support for multiple programming languages
-- Modular architecture with reusable components
-- Comprehensive testing framework
-- Documentation generation and management
+---
 
-### Project Management
-- Task and milestone tracking
-- Team collaboration features
-- Resource allocation and planning
-- Progress reporting and analytics
+## 5. ビジネスフロー & ルール
 
-## Non-Functional Requirements
+### 5.1 主な業務フロー
+1. 画像認識AIがベッド周辺の異常姿勢を自動判別
+2. 管理端末（PC・モバイル）に異常発生、発生画像、履歴への通知
+3. 通知を受けたスタッフは状況を確認し、訪室の要否を判断
+4. 対応するスタッフが端末上で「訪室中」登録し他スタッフと共有
+5. 対応完了後、端末操作で見守り再開を登録
 
-### Performance
-- System response time under 2 seconds
-- Support for concurrent users
-- Scalable architecture for growth
-- Efficient resource utilization
+### 5.2 ビジネスルール
+- 発生画像・履歴動画は常にモザイク処理したものを利用
+- 居室ごと原則1台のカメラ・エッジデバイス設置
+- 履歴動画保存期間は法令・運用要件内（例: 30日）
+- 履歴・スタッフ名等の情報は適切な権限者のみ参照可
+- 電子的な記録のみ、紙帳票は対象外とする
 
-### Security
-- Secure authentication and authorization
-- Data encryption and protection
-- Audit logging and compliance
-- Regular security assessments
+---
 
-### Reliability
-- 99.9% system uptime
-- Automated backup and recovery
-- Error handling and graceful degradation
-- Monitoring and alerting capabilities
+## 6. 品質要件・制約（非機能要件）
 
-## Success Criteria
+### 6.1 品質要件
+- システム稼働率24時間365日（SLA：99.5%）
+- 当日内の全イベントの時系列整合性確保
+- 通知から数十秒以内での反応（最大30秒以内）
+- 映像系データは暗号化保存、アクセス制御必須
+- プライバシー管理（最大限の匿名化・モザイク処理）
 
-### Quantitative Metrics
-- Reduce development time by 40%
-- Achieve 99.9% system availability
-- Support 1000+ concurrent users
-- Maintain response times under 2 seconds
+### 6.2 制約
+- クラウド利用不可、オンプレミス展開のみ
+- 介護ソフト/LIFEや電子カルテ連携は本要件には含まない
+- 医療・介護法関連ガイドライン遵守
+- 導入・更改・保守は全て施設単位
+- 最大導入規模あたりのサーバ・ストレージ容量指定あり
+- 予算上限・納期（2025年内に初期商用）
 
-### Qualitative Metrics
-- High user satisfaction scores
-- Positive developer experience feedback
-- Successful project delivery rates
-- Adoption across development teams
+---
 
-## Constraints and Assumptions
+## 7. 成功基準 & KPI
 
-### Technical Constraints
-- Must integrate with existing infrastructure
-- Compliance with security standards
-- Support for legacy systems
-- Resource and budget limitations
+- システム通報から30秒以内の通知到達率: 95%以上
+- 転倒・異常姿勢検知の精度: 90%以上
+- スタッフによる通知履歴参照比率: 80%以上
+- 属人的対応減少（業務効率化指標の改善）
+- 解約率（チャーンレート）の低減
+- スタッフ満足度アンケートで一定以上のスコア獲得
+- 収益/月間導入件数指標 等
 
-### Business Constraints
-- Timeline and delivery requirements
-- Regulatory and compliance needs
-- Organizational change management
-- Training and adoption requirements
+---
 
-## Risk Assessment
+## 8. 除外事項（Out of Scope）
 
-### Technical Risks
-- Integration complexity
-- Performance and scalability challenges
-- Security vulnerabilities
-- Technology obsolescence
+- 介護ソフトや厚労省LIFEシステム、医療機関電子カルテとのデータ連携
+- 外部クラウドへのデータアップロード
+- リアルタイム映像監視用の常時ライブストリーム
+- スタッフの勤怠管理システム機能
+- 音声・生体センサー等カメラ外のハード連携
+- 利用現場での紙帳票管理業務
+- 外国語（日本語・現地言語以外）UI
 
-### Business Risks
-- User adoption challenges
-- Resource availability
-- Market competition
-- Regulatory changes
+---
 
-## Conclusion
+## 付録：非機能要件まとめ（抜粋）
 
-This business requirement document provides the foundation for developing the dodo AI system, ensuring alignment between business objectives and technical implementation while addressing stakeholder needs and constraints.
+- パフォーマンス：最大同時50ルーム（100ユーザー）で遅延/重複なく運用
+- 可用性：オンプレ障害時の自動復旧対応（UPS推奨）
+- セキュリティ：ISO27001水準、すべてデータ暗号化
+- 保守性：ソフトウェア更新は遠隔対応可
+- 災害時復旧：施設内バックアップ必須、月次点検
+
+---
+
+※本書はビジネス要件の明示・合意形成、および後続工程への橋渡し用途とします。  
+技術的詳細・開発手法・UI/UXなどはシステム要件定義、設計段階で策定します。
