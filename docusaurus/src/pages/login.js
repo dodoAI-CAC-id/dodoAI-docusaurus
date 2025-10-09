@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Layout from '@theme/Layout';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {
   signInWithEmailAndPassword,
   getMultiFactorResolver,
@@ -10,8 +11,16 @@ import { signInWithGitHub } from '../lib/githubAuth';
 import { getGithubAuthConfig } from '../lib/firebaseConfig';
 
 export default function LoginPage() {
-  const { auth } = initAuth(typeof window !== 'undefined' && window.docusaurus?.siteConfig?.customFields || {});
-  const githubAuthConfig = getGithubAuthConfig(typeof window !== 'undefined' && window.docusaurus?.siteConfig?.customFields || {});
+  const { siteConfig } = useDocusaurusContext();
+  const customFields = siteConfig.customFields || {};
+  
+  console.log('CustomFields:', customFields);
+  console.log('Firebase Project ID:', customFields.firebaseProjectId);
+  
+  const { auth } = initAuth(customFields);
+  const githubAuthConfig = getGithubAuthConfig(customFields);
+  
+  console.log('Auth initialized:', auth ? 'success' : 'failed');
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
