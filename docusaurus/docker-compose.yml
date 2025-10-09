@@ -1,9 +1,7 @@
 version: '3'
 services:
   lowcode-docusaurus:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: 717475032339.dkr.ecr.ap-northeast-1.amazonaws.com/dodoai-docusaurus:latest
     ports:
       - "4000:4000"
     working_dir: /app

@@ -16,6 +16,7 @@ module.exports = [
   {
     type: 'category',
     label: 'Specification',
+    key: 'microservice-specification',
     items: [
       'microservice/specification/detail-functional-requirement',
     ],
@@ -23,6 +24,7 @@ module.exports = [
   {
     type: 'category',
     label: 'Design',
+    key: 'microservice-design',
     items: [
       'microservice/design/sequence-diagram',
       'microservice/design/microservice-api-list',
@@ -33,6 +35,7 @@ module.exports = [
   {
     type: 'category',
     label: 'Develop',
+    key: 'microservice-develop',
     items: [
       'microservice/develop/api-design',
       'microservice/develop/setup-mock-with-swagger',
@@ -45,6 +48,7 @@ module.exports = [
   {
     type: 'category',
     label: 'Test',
+    key: 'microservice-test',
     items: [
       'microservice/test/unit-tests-planning',
       'microservice/test/microservice-unit-tests-planning',

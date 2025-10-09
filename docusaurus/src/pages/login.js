@@ -116,7 +116,7 @@ export default function LoginPage() {
         
         {error && <p style={{ color: 'red' }}>{error}</p>}
         {loading && <p>Loading...</p>}
-        <br />※If you do not have a dodoAI account, please sign up at <a href="https://xxx">https://xxx</a>
+        <br />※If you do not have a dodoAI account, please sign up at <a href="https://dodoai.cacidentity.com/">https://dodoai.cacidentity.com/</a>
       </div>
     </Layout>
   );

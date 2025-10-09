@@ -11,7 +11,7 @@ const config = {
   // favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://58llm.link/',
+  url: 'https://docs.dodoai.cacidentity.com/',
   baseUrl: '/',
 
   customFields: {
@@ -27,14 +27,14 @@ const config = {
     githubRepoOwner: process.env.REACT_APP_GITHUB_REPO_OWNER || '58web3',
     githubRepoName: process.env.REACT_APP_GITHUB_REPO_NAME || '',
     githubClientId: process.env.REACT_APP_GITHUB_CLIENT_ID || '',
-    authApiUrl: process.env.REACT_APP_AUTH_API_URL || 'https://docs-auth.58llm.link',
+    authApiUrl: process.env.REACT_APP_AUTH_API_URL || '',
   },
 
   trailingSlash: false,
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: '58 Inc.', // Usually your GitHub org/user name.
-  projectName: 'XXXX', // Usually your repo name.
+  organizationName: 'CAC', // Usually your GitHub org/user name.
+  projectName: 'Docs', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -45,16 +45,13 @@ const config = {
 
   i18n: {
     defaultLocale: 'en',
-    locales: ['en','ja','vi'],
+    locales: ['en','ja'],
     localeConfigs: {
       en: {
         label: 'English',
       },
       ja: {
         label: '日本語',
-      },
-      vi: {
-        label: 'Tiếng Việt',
       },
     },
   },

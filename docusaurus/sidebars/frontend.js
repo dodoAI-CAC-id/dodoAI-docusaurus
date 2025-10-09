@@ -2,6 +2,7 @@ module.exports = [
   {
     type: 'category',
     label: 'Specification',
+    key: 'frontend-specification',
     items: [
       'frontend/specification/ui-design-figma',
       'frontend/specification/ui-list',
@@ -10,6 +11,7 @@ module.exports = [
   {
     type: 'category',
     label: 'Design',
+    key: 'frontend-design',
     items: [
       'frontend/design/ui-component-design',
       'frontend/design/ui-component-library',
@@ -20,6 +22,7 @@ module.exports = [
   {
     type: 'category',
     label: 'Develop',
+    key: 'frontend-develop',
     items: [
       'frontend/develop/atoms-ui-component-library',
       'frontend/develop/molecules-ui-component-library',
@@ -35,6 +38,7 @@ module.exports = [
       {
         type: 'category',
         label: 'Design',
+        key: 'frontend-feature-1-design',
         items: [
           'frontend/feature-1/design/application-layer-design',
           'frontend/feature-1/design/composition-layer-design',
@@ -46,6 +50,7 @@ module.exports = [
       {
         type: 'category',
         label: 'Develop',
+        key: 'frontend-feature-1-develop',
         items: [
           'frontend/feature-1/develop/domain-layer',
           'frontend/feature-1/develop/application-layer',
