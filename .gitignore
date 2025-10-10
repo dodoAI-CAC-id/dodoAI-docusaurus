@@ -61,10 +61,8 @@ coverage/
 .env.test.local
 
 # Docusaurus
-.docusaurus/
 docusaurus/.docusaurus/
 docusaurus/build/
-docusaurus/.cache/
 
 # Frontend frameworks/tools
 .next/
@@ -80,44 +78,6 @@ docusaurus/.cache/
 .netlify/
 .amplify/
 .firebase/
-
-# Flutter / Dart
-.dart_tool/
-.packages
-.pub-cache/
-.flutter-plugins
-.flutter-plugins-dependencies
-# Flutter build output
-build/
-
-# iOS / macOS (Flutter)
-ios/Pods/
-macos/Pods/
-**/Flutter/.last_build_id
-**/*.xcuserdatad/
-**/*.xcuserstate
-**/DerivedData/
-
-# Android (Flutter)
-.android/
-.gradle/
-**/local.properties
-**/.cxx/
-**/captures/
-**/build/
-
-# Web (Flutter)
-web/.dart_tool/
-
-# Desktop builds (Flutter)
-linux/**/build/
-windows/**/build/
-docusaurus/build
-
-# macOS system files
-.DS_Store
-.AppleDouble
-.LSOverride
 
 # macOS metadata folder (created when zipping)
 __MACOSX/
