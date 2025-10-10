@@ -1,0 +1,9 @@
+name: string @index(term) .
+description: string .
+createdAt: datetime .
+updatedAt: datetime .
+category: string @index(exact) .
+content: string @index(fulltext) .
+project: [uid] @reverse .
+task: [uid] @reverse .
+templates: [uid] @reverse .

@@ -1,0 +1,65 @@
+module.exports = [
+  {
+    type: 'category',
+    label: 'Modular Onion Architecture',
+    items: [
+      'frontend/modular-onion-architecture/introduction-and-purpose',
+      'frontend/modular-onion-architecture/architecture-principles',
+      'frontend/modular-onion-architecture/directory-structure-and-layer-responsibilities',
+      'frontend/modular-onion-architecture/atomic-design-implementation-rules',
+      'frontend/modular-onion-architecture/layer-responsibility-matrix',
+      'frontend/modular-onion-architecture/bloc-usecase-repository-integration-design',
+      'frontend/modular-onion-architecture/graphql-bff-integration-design',
+      'frontend/modular-onion-architecture/page-and-feature-separation-guidelines',
+      'frontend/modular-onion-architecture/ui-layer-responsibility-constraints-and-atomic-design',
+      'frontend/modular-onion-architecture/di-and-routing-design-strategy',
+      'frontend/modular-onion-architecture/testing-strategy-and-structure',
+      'frontend/modular-onion-architecture/widgetbook-and-story-management-rules',
+    ],
+  },
+  {
+    type: 'category',
+    label: 'Specification',
+    items: [
+      'frontend/specification/ui-prototyping-ai/ui-prototyping-ai',
+      'frontend/specification/ui-list/ui-list',
+      'frontend/specification/ui-design-figma/ui-design-figma',
+    ],
+  },
+  {
+    type: 'category',
+    label: 'Design',
+    items: [
+      'frontend/design/frontend-feature-module-design',
+      'frontend/design/screen-design',      
+      'frontend/design/application-layer-design',
+      'frontend/design/composition-layer-design',
+      'frontend/design/domain-layer-design',
+      'frontend/design/infrastructure-layer-design',
+      'frontend/design/presentation-layer-design',
+    ],
+  },
+  {
+    type: 'category',
+    label: 'Develop',
+    items: [
+      'frontend/develop/application-layer-develop',
+      'frontend/develop/composition-layer-develop',
+      'frontend/develop/domain-layer-develop',
+      'frontend/develop/infrastructure-layer-develop',
+      'frontend/develop/presentation-layer-develop',
+      'frontend/develop/atoms-ui-component-library',
+      'frontend/develop/molecules-ui-component-library',
+      'frontend/develop/organism-ui-component-library',
+      'frontend/develop/template-ui-component-library',
+      'frontend/develop/pages-ui-component-library',
+    ],
+  },
+  {
+    type: 'category',
+    label: 'Test',
+    items: [
+      'frontend/test/frontend-unit-tests-planning',
+    ],
+  },
+];

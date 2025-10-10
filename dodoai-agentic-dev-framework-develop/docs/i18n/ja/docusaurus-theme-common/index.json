@@ -1,0 +1,18 @@
+{
+  "theme.footer.links.title.agentic-dev-framework": {
+    "message": "agentic-dev-framework",
+    "description": "フッターのagentic-dev-frameworkセクションのタイトル"
+  },
+  "theme.footer.links.title.Links": {
+    "message": "リンク",
+    "description": "フッターのLinksセクションのタイトル"
+  },
+  "theme.footer.links.item.label.Guides": {
+    "message": "ガイド",
+    "description": "フッターのGuidesリンクのラベル"
+  },
+  "theme.footer.links.item.label.agentic-dev-framework": {
+    "message": "agentic-dev-framework",
+    "description": "フッターのagentic-dev-frameworkリンクのラベル"
+  }
+}

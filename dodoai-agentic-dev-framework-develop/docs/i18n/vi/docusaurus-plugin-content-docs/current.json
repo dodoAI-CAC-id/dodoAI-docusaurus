@@ -1,0 +1,82 @@
+{
+  "version.label": {
+    "message": "v0.9.0",
+    "description": "Nhãn cho phiên bản hiện tại"
+  },
+  "sidebar.mySidebar.category.Standard Dev Flow(ADF)": {
+    "message": "Quy trình phát triển chuẩn (ADF)",
+    "description": "Nhãn cho danh mục Quy trình phát triển chuẩn (ADF) trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.Project Management": {
+    "message": "Quản lý Dự án",
+    "description": "Nhãn cho danh mục Quản lý Dự án trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.Development Rules": {
+    "message": "Quy tắc Phát triển",
+    "description": "Nhãn cho danh mục Quy tắc Phát triển trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.Specification": {
+    "message": "Đặc tả",
+    "description": "Nhãn cho danh mục Đặc tả trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.Design": {
+    "message": "Thiết kế",
+    "description": "Nhãn cho danh mục Thiết kế trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.Develop": {
+    "message": "Phát triển",
+    "description": "Nhãn cho danh mục Phát triển trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.CI/CD": {
+    "message": "CI/CD",
+    "description": "Nhãn cho danh mục CI/CD trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.Frontend": {
+    "message": "Frontend",
+    "description": "Nhãn cho danh mục Frontend trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.Backend": {
+    "message": "Backend",
+    "description": "Nhãn cho danh mục Backend trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.Smart Contract": {
+    "message": "Hợp đồng Thông minh",
+    "description": "Nhãn cho danh mục Hợp đồng Thông minh trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.Infra": {
+    "message": "Cơ sở hạ tầng",
+    "description": "Nhãn cho danh mục Cơ sở hạ tầng trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.System Test+": {
+    "message": "Kiểm thử Hệ thống+",
+    "description": "Nhãn cho danh mục Kiểm thử Hệ thống+ trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.Release": {
+    "message": "Phát hành",
+    "description": "Nhãn cho danh mục Phát hành trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.How to update Agentic Dev Framework": {
+    "message": "Cách cập nhật Sổ tay",
+    "description": "Nhãn cho danh mục Cách cập nhật Sổ tay trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.dodoAi User Guide": {
+    "message": "Hướng dẫn Sử dụng dodoAi",
+    "description": "Nhãn cho danh mục Hướng dẫn Sử dụng dodoAi trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.Template Deploy": {
+    "message": "Triển khai Mẫu",
+    "description": "Nhãn cho danh mục Triển khai Mẫu trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.58 Knowledge": {
+    "message": "58 Kiến thức",
+    "description": "Nhãn cho danh mục 58 Kiến thức trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.category.Daily Report": {
+    "message": "Báo cáo Hàng ngày",
+    "description": "Nhãn cho danh mục Báo cáo Hàng ngày trong thanh bên mySidebar"
+  },
+  "sidebar.mySidebar.doc.Introduction": {
+    "message": "Giới thiệu",
+    "description": "Nhãn cho mục tài liệu Giới thiệu trong thanh bên mySidebar, liên kết đến mục tài liệu chính"
+  }
+}

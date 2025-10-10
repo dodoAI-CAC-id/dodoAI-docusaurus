@@ -1,0 +1,161 @@
+{
+  "theme.ErrorPageContent.title": {
+    "message": "Trang này đã bị lỗi.",
+    "description": "Tiêu đề của trang dự phòng khi trang bị lỗi"
+  },
+  "theme.NotFound.title": {
+    "message": "Không tìm thấy trang",
+    "description": "Tiêu đề của trang 404"
+  },
+  "theme.NotFound.p1": {
+    "message": "Chúng tôi không thể tìm thấy những gì bạn đang tìm kiếm.",
+    "description": "Đoạn đầu tiên trên trang 404"
+  },
+  "theme.NotFound.p2": {
+    "message": "Vui lòng liên hệ với trang web đã dẫn bạn tới đây và thông báo cho họ biết rằng đường dẫn này bị hỏng.",
+    "description": "Đoạn thứ hai trên trang 404"
+  },
+  "theme.admonition.note": {
+    "message": "ghi chú",
+    "description": "Nhãn mặc định sử dụng cho khung Ghi chú (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "mẹo",
+    "description": "Nhãn mặc định sử dụng cho khung Mẹo (:::tip)"
+  },
+  "theme.admonition.danger": {
+    "message": "cảnh báo",
+    "description": "Nhãn mặc định sử dụng cho khung Cảnh báo (:::danger)"
+  },
+  "theme.admonition.info": {
+    "message": "thông tin",
+    "description": "Nhãn mặc định sử dụng cho khung Thông tin (:::info)"
+  },
+  "theme.admonition.caution": {
+    "message": "cẩn thận",
+    "description": "Nhãn mặc định sử dụng cho khung Cẩn thận (:::caution)"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "Trở lại đầu trang",
+    "description": "Nhãn ARIA cho nút trở lại đầu trang"
+  },
+  "theme.blog.archive.title": {
+    "message": "Lưu trữ",
+    "description": "Tiêu đề của trang lưu trữ blog"
+  },
+  "theme.blog.archive.description": {
+    "message": "Lưu trữ",
+    "description": "Mô tả của trang lưu trữ blog"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "Thanh điều hướng của trang danh sách bài viết",
+    "description": "Nhãn ARIA cho thanh phân trang trong blog"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "Các bài mới hơn",
+    "description": "Nhãn sử dụng để điều hướng tới trang blog có bài viết mới hơn"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "Các bài cũ hơn",
+    "description": "Nhãn sử dụng để điều hướng tới trang blog có bài viết cũ hơn"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "Thanh điều hướng của trang bài viết",
+    "description": "Nhãn ARIA cho thanh phân trang trong bài viết"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "Bài mới hơn",
+    "description": "Nhãn nút blog để điều hướng tới bài viết cũ hơn hoặc bài trước"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "Bài cũ hơn",
+    "description": "Nhãn nút blog để điều hướng tới bài viết mới hơn hoặc bài tiếp theo"
+  },
+  "theme.blog.post.plurals": {
+    "message": "{count} bài viết",
+    "description": "Nhãn số nhiều của \"{count} posts\". Dùng theo cú pháp dạng số nhiều phù hợp với ngôn ngữ."
+  },
+  "theme.blog.tagTitle": {
+    "message": "{nPosts} được gắn thẻ \"{tagName}\"",
+    "description": "Tiêu đề của trang cho một thẻ trong blog"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "Xem tất cả Thẻ",
+    "description": "Nhãn của liên kết tới danh sách trang thẻ"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "Chuyển đổi chế độ sáng và tối (hiện tại {mode})",
+    "description": "Nhãn ARIA cho nút chuyển chế độ tối/sáng trên thanh điều hướng"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "chế độ tối",
+    "description": "Tên của chế độ màu tối"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "chế độ sáng",
+    "description": "Tên của chế độ màu sáng"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "Breadcrumbs",
+    "description": "Nhãn ARIA cho thanh điều hướng breadcrumbs"
+  },
+  "theme.docs.DocCard.categoryDescription": {
+    "message": "{count} mục",
+    "description": "Mô tả mặc định cho thẻ danh mục trong index, chỉ số lượng mục trong danh mục"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "Thanh điều hướng của trang tài liệu",
+    "description": "Nhãn ARIA cho thanh phân trang trong các tài liệu"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "Trước",
+    "description": "Nhãn sử dụng để điều hướng tới tài liệu trước"
+  },
+  "theme.docs.paginator.next": {
+    "message": "Kế tiếp",
+    "description": "Nhãn sử dụng để điều hướng tới tài liệu tiếp theo"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "{count} tài liệu đã gắn thẻ",
+    "description": "Nhãn số nhiều cho \"{count} tài liệu đã gắn thẻ\". Dùng theo cú pháp dạng số nhiều phù hợp với ngôn ngữ."
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "Phiên bản: {versionLabel}"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "Đây là tài liệu chưa được phát hành chính thức của {siteTitle} phiên bản {versionLabel}.",
+    "description": "Nhãn dùng để thông báo người dùng rằng họ đang xem tài liệu của phiên bản chưa phát hành"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "Để xem các cập nhật mới nhất, vui lòng xem phiên bản {latestVersionLink} ({versionLabel}).",
+    "description": "Nhãn dùng để thông báo người dùng về phiên bản mới nhất"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "phiên bản mới nhất",
+    "description": "Nhãn cho liên kết tới phiên bản mới nhất"
+  },
+  "theme.common.editThisPage": {
+    "message": "Sửa trang này",
+    "description": "Nhãn liên kết để chỉnh sửa trang hiện tại"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "Đường dẫn trực tiếp tới {heading}",
+    "description": "Tiêu đề cho liên kết tới mục tiêu cụ thể"
+  },
+  "theme.lastUpdated.atDate": {
+    "message": " vào {date}",
+    "description": "Từ dùng để mô tả ngày trang được cập nhật lần cuối"
+  },
+  "theme.lastUpdated.lastUpdatedAtBy": {
+    "message": "Cập nhật lần cuối{atDate}{byUser}",
+    "description": "Câu sử dụng để hiển thị khi tài liệu được cập nhật lần cuối và bởi ai"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "Mở rộng thanh bên",
+    "description": "Nhãn và tiêu đề ARIA cho nút mở rộng danh mục"
+  },
+  "theme.CodeBlock.copy": {
+    "message": "Sao chép",
+    "description": "Nhãn nút sao chép trong các block code"
+  }
+}

@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  # Dgraph services
+  dgraph-zero:
+    image: dgraph/dgraph:latest
+    container_name: adf-dgraph-zero
+    ports:
+      - "5080:5080"
+      - "6081:6080"
+    command: dgraph zero --my=dgraph-zero:5080
+    networks:
+      - adf-network
+    volumes:
+      - dgraph-zero-data:/dgraph
+
+  dgraph-alpha:
+    image: dgraph/dgraph:latest
+    container_name: adf-dgraph-alpha
+    ports:
+      - "8081:8080"
+      - "9080:9080"
+    command: dgraph alpha --my=dgraph-alpha:7080 --zero=dgraph-zero:5080 --security whitelist=0.0.0.0/0
+    depends_on:
+      - dgraph-zero
+    networks:
+      - adf-network
+    volumes:
+      - dgraph-alpha-data:/dgraph
+
+  dgraph-ratel:
+    image: dgraph/ratel:latest
+    container_name: adf-dgraph-ratel
+    ports:
+      - "8001:8000"
+    networks:
+      - adf-network
+
+  # GraphQL API service
+  adf-api:
+    build:
+      context: ./adf-graph/api
+      dockerfile: Dockerfile
+    container_name: adf-graphql-api
+    ports:
+      - "4000:4000"
+    environment:
+      - DGRAPH_ALPHA_URL=dgraph-alpha:9080
+      - NODE_ENV=development
+    depends_on:
+      - dgraph-alpha
+    networks:
+      - adf-network
+
+  # React frontend service
+  adf-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: adf-react-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_GRAPHQL_URL=http://localhost:4000/graphql
+    depends_on:
+      - adf-api
+    networks:
+      - adf-network
+
+networks:
+  adf-network:
+    driver: bridge
+
+volumes:
+  dgraph-zero-data:
+  dgraph-alpha-data:
