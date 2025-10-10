@@ -112,3 +112,12 @@ web/.dart_tool/
 # Desktop builds (Flutter)
 linux/**/build/
 windows/**/build/
+docusaurus/build
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS metadata folder (created when zipping)
+__MACOSX/
