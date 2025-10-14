@@ -5,343 +5,85 @@ title: Conceptual Data Diagram
 
 # Conceptual Data Diagram
 
-## Overview
+# コンセプチュアルデータダイアグラム
+## 異常検知・通知・現場対応システムの概念データモデル（ADMIN除外版）
 
-This document presents the conceptual data model for the dodo AI system, illustrating the key entities, their attributes, and relationships that form the foundation of the system's data architecture.
+---
 
-## Core Entities
+```mermaid
+erDiagram
+    PERSON ||--o{ INCIDENT : "experiences"
+    INCIDENT ||--|{ NOTIFICATION : "triggers"
+    INCIDENT ||--|{ ACTION : "recorded for"
+    INCIDENT ||--o{ INCIDENT_VIDEO : "has"
+    NOTIFICATION ||--|{ NOTIFICATION_HISTORY : "is tracked by"
+    NOTIFICATION }o--o| STAFF : "sent to"
+    ACTION |o--|| STAFF : "performed by"
+    STAFF }o--o{ DEPARTMENT : "belongs to"
+    CAMERA_DEVICE ||--o{ INCIDENT : "detects"
+    CAMERA_DEVICE }o--|| ROOM : "installed in"
+    ROOM ||--o{ PERSON : "assigned to"
+    CAMERA_DEVICE }o--o{ DETECTION_AREA : "covers"
+    INCIDENT ||--o{ AUDIT_LOG : "logged by"
+    CONFIGURATION
+```
 
-### User Management Domain
+---
 
-#### User
-- **Attributes:**
-  - user_id (Primary Key)
-  - email (Unique)
-  - username (Unique)
-  - first_name
-  - last_name
-  - password_hash
-  - created_at
-  - updated_at
-  - last_login
-  - is_active
-  - email_verified
+## 概念エンティティ説明
 
-#### Role
-- **Attributes:**
-  - role_id (Primary Key)
-  - role_name (Unique)
-  - description
-  - permissions
-  - created_at
-  - updated_at
+### PERSON
+- 監視対象となる入居者や患者情報を管理。
+- 異常発生（INCIDENT）や履歴の主対象。
 
-#### UserRole
-- **Attributes:**
-  - user_id (Foreign Key)
-  - role_id (Foreign Key)
-  - assigned_at
-  - assigned_by
+### INCIDENT（異常イベント）
+- 転倒や離床などAIによって検知された異常イベント。
+- 複数のNOTIFICATION（通知）やINCIDENT_VIDEO、ACTION（対応）と関連。
 
-### Project Management Domain
+### NOTIFICATION（異常通知）
+- 異常イベントに連動して生成・配信される各種プッシュ通知。
+- STAFFへのルーティングや、NOTIFICATION_HISTORY（既読/未読）と紐付。
 
-#### Organization
-- **Attributes:**
-  - organization_id (Primary Key)
-  - name
-  - description
-  - settings
-  - created_at
-  - updated_at
+### NOTIFICATION_HISTORY（通知履歴）
+- 各通知ごと、各スタッフごとの閲覧・既読/未読・エスカレーション履歴。
 
-#### Project
-- **Attributes:**
-  - project_id (Primary Key)
-  - organization_id (Foreign Key)
-  - name
-  - description
-  - status
-  - created_by (Foreign Key to User)
-  - created_at
-  - updated_at
-  - settings
-  - repository_url
+### ACTION（対応履歴）
+- スタッフが実施した「対応中」「完了」などの現場対応情報。
+- INCIDENTごと、STAFFごとに履歴として記録。
 
-#### ProjectMember
-- **Attributes:**
-  - project_id (Foreign Key)
-  - user_id (Foreign Key)
-  - role
-  - joined_at
-  - permissions
+### STAFF
+- 異常発生時に対応・通知を受ける現場スタッフ。
 
-#### Task
-- **Attributes:**
-  - task_id (Primary Key)
-  - project_id (Foreign Key)
-  - title
-  - description
-  - status
-  - priority
-  - assigned_to (Foreign Key to User)
-  - created_by (Foreign Key to User)
-  - due_date
-  - created_at
-  - updated_at
-  - estimated_hours
-  - actual_hours
+### DEPARTMENT（部署）
+- スタッフの所属単位。
 
-### Development Framework Domain
+### ROOM（居室・監視エリア）
+- カメラデバイス設置の物理空間。PERSONと紐付。
 
-#### Template
-- **Attributes:**
-  - template_id (Primary Key)
-  - name
-  - description
-  - category
-  - version
-  - content
-  - created_by (Foreign Key to User)
-  - created_at
-  - updated_at
-  - is_public
-  - usage_count
+### CAMERA_DEVICE（カメラデバイス）
+- AI異常検知のデバイス実態。
+- ROOMに設置される。
+- 派生的にINCIDENTを検知。
 
-#### Component
-- **Attributes:**
-  - component_id (Primary Key)
-  - name
-  - description
-  - type
-  - version
-  - source_code
-  - documentation
-  - created_by (Foreign Key to User)
-  - created_at
-  - updated_at
-  - dependencies
+### DETECTION_AREA（検知エリア）
+- カメラごと設定される検知用の監視エリア単位。
 
-#### CodeGeneration
-- **Attributes:**
-  - generation_id (Primary Key)
-  - user_id (Foreign Key)
-  - project_id (Foreign Key)
-  - prompt
-  - generated_code
-  - template_used (Foreign Key to Template)
-  - created_at
-  - feedback_rating
-  - is_applied
+### INCIDENT_VIDEO（異常動画記録）
+- INCIDENT発生直前後のモザイク動画/サムネイルファイル。
 
-### Testing and Quality Domain
+### AUDIT_LOG（監査ログ）
+- 各種操作・設定・参照の証跡、スタッフ・管理者の全イベントをイベント単位で記録。
 
-#### TestSuite
-- **Attributes:**
-  - suite_id (Primary Key)
-  - project_id (Foreign Key)
-  - name
-  - description
-  - type
-  - created_by (Foreign Key to User)
-  - created_at
-  - updated_at
+### CONFIGURATION（システム/AI/運用設定）
+- AI検知感度・動画保存期間・通知ルール・ON/OFF管理など各種システム設定。
 
-#### TestCase
-- **Attributes:**
-  - case_id (Primary Key)
-  - suite_id (Foreign Key)
-  - name
-  - description
-  - test_steps
-  - expected_result
-  - status
-  - created_at
-  - updated_at
+---
 
-#### TestExecution
-- **Attributes:**
-  - execution_id (Primary Key)
-  - case_id (Foreign Key)
-  - project_id (Foreign Key)
-  - executed_by (Foreign Key to User)
-  - status
-  - result
-  - execution_time
-  - error_message
-  - executed_at
+## 主な関係（日本語補足）
 
-### Deployment and Operations Domain
+- 1人のPERSONには複数のINCIDENT（異常）が紐付く。
+- 1つのINCIDENTは複数のNOTIFICATION（通知）・ACTION（現場対応）・INCIDENT_VIDEOが紐付。
+- NOTIFICATIONはSTAFF（部署所属）へ配信され、配信先や履歴はNOTIFICATION_HISTORYで記録。
+- 部屋（ROOM）にはCAMERA_DEVICEが設置され、各カメラは複数のDETECTION_AREAを持ち得る。
+- 全操作や変更・検索等はAUDIT_LOGとして証跡化。
 
-#### Environment
-- **Attributes:**
-  - environment_id (Primary Key)
-  - project_id (Foreign Key)
-  - name
-  - type
-  - configuration
-  - status
-  - created_at
-  - updated_at
-
-#### Deployment
-- **Attributes:**
-  - deployment_id (Primary Key)
-  - project_id (Foreign Key)
-  - environment_id (Foreign Key)
-  - version
-  - status
-  - deployed_by (Foreign Key to User)
-  - deployed_at
-  - rollback_id
-  - configuration
-
-#### Pipeline
-- **Attributes:**
-  - pipeline_id (Primary Key)
-  - project_id (Foreign Key)
-  - name
-  - configuration
-  - status
-  - created_by (Foreign Key to User)
-  - created_at
-  - updated_at
-
-### Analytics and Logging Domain
-
-#### ActivityLog
-- **Attributes:**
-  - log_id (Primary Key)
-  - user_id (Foreign Key)
-  - project_id (Foreign Key)
-  - action
-  - entity_type
-  - entity_id
-  - details
-  - ip_address
-  - user_agent
-  - created_at
-
-#### Metric
-- **Attributes:**
-  - metric_id (Primary Key)
-  - project_id (Foreign Key)
-  - metric_name
-  - metric_value
-  - metric_type
-  - recorded_at
-  - metadata
-
-#### Report
-- **Attributes:**
-  - report_id (Primary Key)
-  - project_id (Foreign Key)
-  - name
-  - type
-  - parameters
-  - generated_by (Foreign Key to User)
-  - generated_at
-  - file_path
-
-## Entity Relationships
-
-### Primary Relationships
-
-#### User-Centric Relationships
-- User ←→ UserRole ←→ Role (Many-to-Many)
-- User ←→ ProjectMember ←→ Project (Many-to-Many)
-- User → Task (One-to-Many, assigned tasks)
-- User → CodeGeneration (One-to-Many)
-- User → Template (One-to-Many, created templates)
-
-#### Project-Centric Relationships
-- Organization → Project (One-to-Many)
-- Project → Task (One-to-Many)
-- Project → TestSuite (One-to-Many)
-- Project → Environment (One-to-Many)
-- Project → Deployment (One-to-Many)
-- Project → Pipeline (One-to-Many)
-
-#### Development Workflow Relationships
-- Template → CodeGeneration (One-to-Many)
-- Component → Template (Many-to-Many, dependencies)
-- TestSuite → TestCase (One-to-Many)
-- TestCase → TestExecution (One-to-Many)
-
-#### Deployment Relationships
-- Environment → Deployment (One-to-Many)
-- Project → Pipeline → Deployment (Chain relationship)
-- Deployment → Deployment (Self-referencing for rollbacks)
-
-### Secondary Relationships
-
-#### Audit and Tracking
-- All entities → ActivityLog (Polymorphic relationship)
-- Project → Metric (One-to-Many)
-- Project → Report (One-to-Many)
-
-#### Configuration and Settings
-- Organization → Project (Configuration inheritance)
-- Project → Environment (Configuration deployment)
-- Pipeline → Deployment (Configuration application)
-
-## Data Flow Patterns
-
-### User Interaction Flow
-1. User authentication and role assignment
-2. Project access based on membership and roles
-3. Task assignment and execution tracking
-4. Code generation and template usage
-5. Activity logging for all actions
-
-### Development Workflow
-1. Project creation and setup
-2. Template and component selection
-3. Code generation and customization
-4. Testing and quality assurance
-5. Deployment and monitoring
-
-### Analytics and Reporting
-1. Activity and metric collection
-2. Data aggregation and analysis
-3. Report generation and distribution
-4. Performance monitoring and alerting
-
-## Data Integrity Constraints
-
-### Referential Integrity
-- All foreign key relationships must be maintained
-- Cascade delete rules for dependent entities
-- Orphan record prevention mechanisms
-
-### Business Rules
-- User email uniqueness across the system
-- Project name uniqueness within organizations
-- Role permission validation
-- Task assignment validation (project membership required)
-
-### Data Validation
-- Email format validation
-- Password complexity requirements
-- Date range validations
-- Status value constraints
-
-## Scalability Considerations
-
-### Partitioning Strategies
-- User data partitioned by organization
-- Activity logs partitioned by date
-- Metrics data partitioned by project and time
-
-### Indexing Strategy
-- Primary and foreign key indexes
-- Search optimization indexes
-- Performance monitoring indexes
-- Audit trail indexes
-
-### Archival Policies
-- Historical data retention periods
-- Automated archival processes
-- Data purging strategies
-- Backup and recovery procedures
-
-This conceptual data diagram serves as the foundation for the physical database design and ensures data consistency, integrity, and optimal performance across the dodo AI system.
