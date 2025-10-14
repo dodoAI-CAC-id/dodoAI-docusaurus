@@ -1,339 +1,799 @@
 openapi: 3.0.3
 info:
-  title: Microservice API
-  version: 1.0.0
+  title: 異常検知・通知・現場対応システム API
+  version: "2.0.0"
   description: |
-    API documentation for microservice endpoints, including user management, data operations, and system integration.
-
+    異常検知、通知、対応履歴管理システムのすべての主要エンドポイントとデータモデル
 servers:
-  - url: http://localhost:8080/api
-    description: Local development server
-  - url: https://api.example.com/v1
-    description: Production server
-
+  - url: /api/v2
+tags:
+  - name: Incident
+    description: 異常イベントの管理
+  - name: Notification
+    description: 異常通知・履歴管理
+  - name: Action
+    description: 対応履歴管理
+  - name: Person
+    description: 対象者管理
+  - name: Staff
+    description: スタッフ・部署管理
+  - name: Room
+    description: 居室・監視エリア
+  - name: CameraDevice
+    description: カメラデバイス管理
+  - name: DetectionArea
+    description: 検知エリア管理
+  - name: IncidentVideo
+    description: 異常動画管理
+  - name: AuditLog
+    description: 監査ログ管理
+  - name: Configuration
+    description: システム・AI設定管理
 paths:
-  /users:
+
+  # INCIDENT エンドポイント
+  /incidents:
     get:
-      summary: Retrieve list of users
-      tags:
-        - User Management
-      description: Returns a paginated list of users in the system.
+      tags: [Incident]
+      summary: 異常イベント一覧取得
       parameters:
         - in: query
-          name: page
-          schema:
-            type: integer
-            default: 1
-          description: Page number for pagination
+          name: personId
+          schema: { type: string }
+          description: 対象者IDでフィルタ
         - in: query
-          name: limit
-          schema:
-            type: integer
-            default: 10
-          description: Number of items per page
+          name: from
+          schema: { type: string, format: date-time }
+          description: 開始日時
+        - in: query
+          name: to
+          schema: { type: string, format: date-time }
+          description: 終了日時
+        - in: query
+          name: status
+          schema: { type: string, enum: [open, resolved, monitoring] }
+          description: 異常進捗ステータス
       responses:
-        "200":
-          description: Users retrieved successfully
+        '200':
+          description: 異常イベントリスト
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Users retrieved successfully
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/User"
-                  pagination:
-                    $ref: "#/components/schemas/Pagination"
-        "400":
-          description: Bad request
-        "500":
-          description: Internal server error
+                type: array
+                items: { $ref: '#/components/schemas/Incident' }
+
     post:
-      summary: Create a new user
-      tags:
-        - User Management
-      description: Creates a new user account in the system.
+      tags: [Incident]
+      summary: 異常イベント登録（AI検知用）
       requestBody:
         required: true
         content:
           application/json:
-            schema:
-              $ref: "#/components/schemas/CreateUserRequest"
+            schema: { $ref: '#/components/schemas/IncidentCreate' }
       responses:
-        "201":
-          description: User created successfully
+        '201':
+          description: 作成成功
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User created successfully
-                  data:
-                    $ref: "#/components/schemas/User"
-        "400":
-          description: Bad request - validation errors
-        "409":
-          description: Conflict - user already exists
-        "500":
-          description: Internal server error
+              schema: { $ref: '#/components/schemas/Incident' }
 
-  /users/{userId}:
+  /incidents/{incidentId}:
     get:
-      summary: Get user by ID
-      tags:
-        - User Management
-      description: Retrieves detailed information about a specific user.
+      tags: [Incident]
+      summary: 異常イベント情報詳細
       parameters:
         - in: path
-          name: userId
+          name: incidentId
           required: true
-          schema:
-            type: string
-            format: uuid
-          description: Unique identifier of the user
+          schema: { type: string }
       responses:
-        "200":
-          description: User details retrieved successfully
+        '200':
+          description: 該当イベント
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Incident' }
+
+    patch:
+      tags: [Incident]
+      summary: イベント情報更新
+      parameters:
+        - in: path
+          name: incidentId
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/IncidentUpdate' }
+      responses:
+        '200':
+          description: 更新後イベント
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Incident' }
+
+  # Notification
+  /notifications:
+    get:
+      tags: [Notification]
+      summary: 通知履歴検索
+      parameters:
+        - in: query
+          name: staffId
+          schema: { type: string }
+          description: 通知対象スタッフID
+        - in: query
+          name: incidentId
+          schema: { type: string }
+          description: イベントIDで絞り込み
+        - in: query
+          name: unreadOnly
+          schema: { type: boolean }
+          description: 未読のみ
+      responses:
+        '200':
+          description: 通知リスト
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User details retrieved successfully
-                  data:
-                    $ref: "#/components/schemas/User"
-        "404":
-          description: User not found
-        "500":
-          description: Internal server error
-    put:
-      summary: Update user information
-      tags:
-        - User Management
-      description: Updates an existing user's information.
+                type: array
+                items: { $ref: '#/components/schemas/Notification' }
+
+    post:
+      tags: [Notification]
+      summary: 通知手動作成・再送
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NotificationCreate' }
+      responses:
+        '201':
+          description: 成功
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Notification' }
+
+  /notifications/{notificationId}/mark-read:
+    post:
+      tags: [Notification]
+      summary: 通知（既読）フラグ登録
       parameters:
         - in: path
-          name: userId
+          name: notificationId
           required: true
-          schema:
-            type: string
-            format: uuid
-          description: Unique identifier of the user
+          schema: { type: string }
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateUserRequest"
+              type: object
+              properties:
+                staffId: { type: string }
       responses:
-        "200":
-          description: User updated successfully
+        '200':
+          description: 既読登録成功
+
+  /notifications/{notificationId}/escalate:
+    post:
+      tags: [Notification]
+      summary: エスカレーション発動
+      parameters:
+        - in: path
+          name: notificationId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: エスカレーション済み
+
+  # Action
+  /incidents/{incidentId}/actions:
+    get:
+      tags: [Action]
+      summary: 異常ごとの対応履歴取得
+      parameters:
+        - name: incidentId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: 履歴リスト
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User updated successfully
-                  data:
-                    $ref: "#/components/schemas/User"
-        "400":
-          description: Bad request - validation errors
-        "404":
-          description: User not found
-        "500":
-          description: Internal server error
+                type: array
+                items: { $ref: '#/components/schemas/Action' }
+
+    post:
+      tags: [Action]
+      summary: 対応登録/進捗切替
+      parameters:
+        - name: incidentId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ActionCreate' }
+      responses:
+        '201':
+          description: 成功
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Action' }
+
+  # Person
+  /persons:
+    get:
+      tags: [Person]
+      summary: 対象者リスト
+      responses:
+        '200':
+          description: 全対象者
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Person' }
+    post:
+      tags: [Person]
+      summary: 新規登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PersonCreate' }
+      responses:
+        '201':
+          description: 作成
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Person' }
+
+  /persons/{personId}:
+    get:
+      tags: [Person]
+      summary: 対象者情報取得
+      parameters:
+        - in: path
+          name: personId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: 該当対象者
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Person' }
+    patch:
+      tags: [Person]
+      summary: 対象者情報更新
+      parameters:
+        - in: path
+          name: personId
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PersonUpdate' }
+      responses:
+        '200':
+          description: 更新後
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Person' }
     delete:
-      summary: Delete user
-      tags:
-        - User Management
-      description: Removes a user from the system.
+      tags: [Person]
+      summary: 対象者情報削除
       parameters:
         - in: path
-          name: userId
+          name: personId
           required: true
-          schema:
-            type: string
-            format: uuid
-          description: Unique identifier of the user
+          schema: { type: string }
       responses:
-        "200":
-          description: User deleted successfully
+        '204':
+          description: 削除OK
+
+  # STAFF・部署
+  /staffs:
+    get:
+      tags: [Staff]
+      summary: スタッフリスト
+      responses:
+        '200':
+          description: 全スタッフ
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User deleted successfully
-        "404":
-          description: User not found
-        "500":
-          description: Internal server error
-
-  /data/export:
+                type: array
+                items: { $ref: '#/components/schemas/Staff' }
+  /staffs/{staffId}:
     get:
-      summary: Export system data
-      tags:
-        - Data Operations
-      description: Exports system data in various formats.
+      tags: [Staff]
+      summary: スタッフ詳細
+      parameters:
+        - in: path
+          name: staffId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: 詳細
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Staff' }
+  /departments:
+    get:
+      tags: [Staff]
+      summary: 部署一覧
+      responses:
+        '200':
+          description: 部署リスト
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Department' }
+
+  # 居室(ROOM)
+  /rooms:
+    get:
+      tags: [Room]
+      summary: 居室/監視エリア一覧
+      responses:
+        '200':
+          description: 部屋リスト
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Room' }
+  /rooms/{roomId}:
+    get:
+      tags: [Room]
+      summary: 居室/監視エリア詳細
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: 居室詳細
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Room' }
+
+  # カメラ
+  /camera-devices:
+    get:
+      tags: [CameraDevice]
+      summary: カメラデバイス一覧
+      responses:
+        '200':
+          description: カメラリスト
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/CameraDevice' }
+  /camera-devices/{cameraId}:
+    get:
+      tags: [CameraDevice]
+      summary: カメラ詳細
+      parameters:
+        - in: path
+          name: cameraId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: カメラデバイス詳細
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CameraDevice' }
+
+  # 検知エリア
+  /detection-areas:
+    get:
+      tags: [DetectionArea]
+      summary: 検知エリア一覧
       parameters:
         - in: query
-          name: format
-          schema:
-            type: string
-            enum: [json, csv, xml]
-            default: json
-          description: Export format
-        - in: query
-          name: startDate
-          schema:
-            type: string
-            format: date
-          description: Start date for data export
-        - in: query
-          name: endDate
-          schema:
-            type: string
-            format: date
-          description: End date for data export
+          name: cameraId
+          schema: { type: string }
       responses:
-        "200":
-          description: Data exported successfully
+        '200':
+          description: 検知エリア
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Data exported successfully
-                  downloadUrl:
-                    type: string
-                    example: https://api.example.com/downloads/export-123.json
-        "400":
-          description: Bad request - invalid parameters
-        "500":
-          description: Internal server error
+                type: array
+                items: { $ref: '#/components/schemas/DetectionArea' }
 
+  # INCIDENT_VIDEO
+  /incidents/{incidentId}/videos:
+    get:
+      tags: [IncidentVideo]
+      summary: 異常イベント動画一覧
+      parameters:
+        - in: path
+          name: incidentId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: 動画ファイル/サムネイルリスト
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/IncidentVideo' }
+
+  /videos/{videoId}/file:
+    get:
+      tags: [IncidentVideo]
+      summary: 動画ファイルの実体取得
+      parameters:
+        - in: path
+          name: videoId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: ファイルストリーム
+          content:
+            video/mp4:
+              schema: { type: string, format: binary }
+
+  # AUDIT_LOG
+  /audit-logs:
+    get:
+      tags: [AuditLog]
+      summary: 監査証跡検索
+      parameters:
+        - in: query
+          name: targetType
+          schema: { type: string }
+        - in: query
+          name: userId
+          schema: { type: string }
+        - in: query
+          name: operation
+          schema: { type: string }
+        - in: query
+          name: from
+          schema: { type: string, format: date-time }
+        - in: query
+          name: to
+          schema: { type: string, format: date-time }
+      responses:
+        '200':
+          description: ログ
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/AuditLog' }
+
+  # システム/AI 設定
+  /configurations:
+    get:
+      tags: [Configuration]
+      summary: システム設定取得
+      responses:
+        '200':
+          description: 設定値
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Configuration' }
+    patch:
+      tags: [Configuration]
+      summary: システム設定更新
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ConfigurationUpdate' }
+      responses:
+        '200':
+          description: 変更後設定
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Configuration' }
+
+# --- SCHEMA 共通 ---
 components:
   schemas:
-    User:
+
+    # INCIDENT
+    Incident:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier for the user
-          example: "123e4567-e89b-12d3-a456-426614174000"
-        email:
-          type: string
-          format: email
-          description: User's email address
-          example: "user@example.com"
-        name:
-          type: string
-          description: User's full name
-          example: "John Doe"
-        role:
-          type: string
-          enum: [admin, user, moderator]
-          description: User's role in the system
-          example: "user"
-        createdAt:
-          type: string
-          format: date-time
-          description: Timestamp when the user was created
-          example: "2023-01-15T10:30:00Z"
-        updatedAt:
-          type: string
-          format: date-time
-          description: Timestamp when the user was last updated
-          example: "2023-01-20T14:45:00Z"
-        isActive:
-          type: boolean
-          description: Whether the user account is active
-          example: true
+        id: { type: string }
+        detectedAt: { type: string, format: date-time }
+        type: { type: string, description: "転倒, 離床, 見守り解除 など" }
+        status: { type: string, enum: [open, resolved, monitoring] }
+        personId: { type: string }
+        cameraId: { type: string }
+        roomId: { type: string }
+        detectionAreaId: { type: string }
+        description: { type: string }
+        createdBy: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        notifications: 
+          type: array
+          items: { $ref: '#/components/schemas/Notification' }
+        actions:
+          type: array
+          items: { $ref: '#/components/schemas/Action' }
+        videos:
+          type: array
+          items: { $ref: '#/components/schemas/IncidentVideo' }
 
-    CreateUserRequest:
+    IncidentCreate:
       type: object
-      required:
-        - email
-        - name
-        - role
+      required: [detectedAt,type,personId,cameraId]
       properties:
-        email:
-          type: string
-          format: email
-          description: User's email address
-          example: "newuser@example.com"
-        name:
-          type: string
-          description: User's full name
-          example: "Jane Smith"
-        role:
-          type: string
-          enum: [admin, user, moderator]
-          description: User's role in the system
-          example: "user"
+        detectedAt: { type: string, format: date-time }
+        type: { type: string }
+        personId: { type: string }
+        cameraId: { type: string }
+        roomId: { type: string }
+        detectionAreaId: { type: string }
+        description: { type: string }
 
-    UpdateUserRequest:
+    IncidentUpdate:
       type: object
       properties:
-        email:
-          type: string
-          format: email
-          description: User's email address
-          example: "updated@example.com"
-        name:
-          type: string
-          description: User's full name
-          example: "Jane Updated"
-        role:
-          type: string
-          enum: [admin, user, moderator]
-          description: User's role in the system
-          example: "moderator"
-        isActive:
-          type: boolean
-          description: Whether the user account is active
-          example: false
+        status: { type: string, enum: [open, resolved, monitoring] }
+        description: { type: string }
+        detectionAreaId: { type: string }
 
-    Pagination:
+    # NOTIFICATION
+    Notification:
       type: object
       properties:
-        currentPage:
-          type: integer
-          description: Current page number
-          example: 1
-        totalPages:
-          type: integer
-          description: Total number of pages
-          example: 5
-        totalItems:
-          type: integer
-          description: Total number of items
-          example: 50
-        itemsPerPage:
-          type: integer
-          description: Number of items per page
-          example: 10
+        id: { type: string }
+        incidentId: { type: string }
+        sentToStaffIds:
+          type: array
+          items: { type: string }
+        deliveryRule:
+          type: string
+          description: 通知ルール
+        sentAt: { type: string, format: date-time }
+        notificationType: { type: string }
+        actionRequired: { type: boolean }
+        unreadByStaffIds:
+          type: array
+          items: { type: string }
+        escalated: { type: boolean }
+        notificationHistories:
+          type: array
+          items: { $ref: '#/components/schemas/NotificationHistory' }
 
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    NotificationCreate:
+      type: object
+      required: [incidentId, sentToStaffIds]
+      properties:
+        incidentId: { type: string }
+        sentToStaffIds:
+          type: array
+          items: { type: string }
+        notificationType: { type: string }
+        deliveryRule: { type: string }
+        actionRequired: { type: boolean }
 
-security:
-  - BearerAuth: []
+    NotificationHistory:
+      type: object
+      properties:
+        id: { type: string }
+        notificationId: { type: string }
+        staffId: { type: string }
+        read: { type: boolean }
+        readAt: { type: string, format: date-time }
+        escalated: { type: boolean }
+        escalatedAt: { type: string, format: date-time }
+
+    # ACTION
+    Action:
+      type: object
+      properties:
+        id: { type: string }
+        incidentId: { type: string }
+        staffId: { type: string }
+        actionType: { type: string, description: "start/complete/escalate" }
+        progress: { type: string, enum: [in_progress, completed, monitoring] }
+        startAt: { type: string, format: date-time }
+        endAt: { type: string, format: date-time }
+        createdAt: { type: string, format: date-time }
+        note: { type: string }
+
+    ActionCreate:
+      type: object
+      required: [actionType,staffId]
+      properties:
+        staffId: { type: string }
+        actionType: { type: string }
+        note: { type: string }
+
+    # PERSON
+    Person:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        kana: { type: string }
+        birthday: { type: string, format: date }
+        gender: { type: string, enum: [male, female, other, unknown] }
+        roomId: { type: string }
+        memo: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    PersonCreate:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        kana: { type: string }
+        birthday: { type: string, format: date }
+        gender: { type: string }
+        roomId: { type: string }
+        memo: { type: string }
+
+    PersonUpdate:
+      type: object
+      properties:
+        name: { type: string }
+        kana: { type: string }
+        birthday: { type: string, format: date }
+        gender: { type: string }
+        roomId: { type: string }
+        memo: { type: string }
+
+    # STAFF/DEPARTMENT
+    Staff:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        departmentId: { type: string }
+        departmentName: { type: string }
+        role: { type: string, description: "care, admin, etc" }
+
+    Department:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+
+    # ROOM
+    Room:
+      type: object
+      properties:
+        id: { type: string }
+        roomNumber: { type: string }
+        description: { type: string }
+        assignedPersonIds:
+          type: array
+          items: { type: string }
+        cameraDeviceIds:
+          type: array
+          items: { type: string }
+
+    # CAMERA
+    CameraDevice:
+      type: object
+      properties:
+        id: { type: string }
+        serialNumber: { type: string }
+        roomId: { type: string }
+        model: { type: string }
+        installDate: { type: string, format: date }
+        status: { type: string, enum: [normal, error, maintenance] }
+
+    # DETECTION_AREA
+    DetectionArea:
+      type: object
+      properties:
+        id: { type: string }
+        cameraId: { type: string }
+        name: { type: string }
+        areaShape: { type: string, description: "座標群/多角形JSONなど" }
+
+    # INCIDENT_VIDEO
+    IncidentVideo:
+      type: object
+      properties:
+        id: { type: string }
+        incidentId: { type: string }
+        fileUrl: { type: string, format: uri }
+        thumbnailUrl: { type: string, format: uri }
+        mosaic: { type: boolean }
+        spanStart: { type: string, format: date-time }
+        spanEnd: { type: string, format: date-time }
+
+    # AUDIT_LOG
+    AuditLog:
+      type: object
+      properties:
+        id: { type: string }
+        operation: { type: string }
+        operatorId: { type: string }
+        targetType: { type: string }
+        targetId: { type: string }
+        timestamp: { type: string, format: date-time }
+        detail: { type: string }
+
+    # CONFIGURATION
+    Configuration:
+      type: object
+      properties:
+        id: { type: string }
+        aiSensitivity: { type: integer }
+        videoRetentionDays: { type: integer }
+        notificationRules: 
+          type: array
+          items: 
+            type: object
+            properties:
+              departmentId: { type: string }
+              rule: { type: string }
+        notificationTimeoutSec: { type: integer }
+        cameraOnOffConfig:
+          type: array
+          items:
+            type: object
+            properties:
+              cameraId: { type: string }
+              enabled: { type: boolean }
+        areaConfig:
+          type: array
+          items:
+            type: object
+            properties:
+              cameraId: { type: string }
+              detectionAreaId: { type: string }
+              config: { type: string }
+        lastUpdated: { type: string, format: date-time }
+        updatedBy: { type: string }
+    ConfigurationUpdate:
+      type: object
+      properties:
+        aiSensitivity: { type: integer }
+        videoRetentionDays: { type: integer }
+        notificationRules: 
+          type: array
+          items: 
+            type: object
+            properties:
+              departmentId: { type: string }
+              rule: { type: string }
+        notificationTimeoutSec: { type: integer }
+        cameraOnOffConfig:
+          type: array
+          items:
+            type: object
+            properties:
+              cameraId: { type: string }
+              enabled: { type: boolean }
+        areaConfig:
+          type: array
+          items:
+            type: object
+            properties:
+              cameraId: { type: string }
+              detectionAreaId: { type: string }
+              config: { type: string }
+
