@@ -1,6 +1,6 @@
 ---
 id: index
-title: XXXX Documentation
+title: mamoAI Documentation
 ---
 
 ## XXX Overview
