@@ -14,6 +14,15 @@ class SearchCriteria extends Equatable {
   /// ステータス（open, resolved, monitoring）
   final String? status;
 
+  /// 担当者
+  final String? assignedTo;
+
+  /// 操作タイプ（対応、完了、訪室不要、対応不要、誤検知）
+  final String? actionType;
+
+  /// 異常検出動作（起床、端坐位、転倒、離床）
+  final String? incidentType;
+
   /// 検索開始日
   final DateTime? fromDate;
 
@@ -31,6 +40,9 @@ class SearchCriteria extends Equatable {
     this.personName,
     this.roomNumber,
     this.status,
+    this.assignedTo,
+    this.actionType,
+    this.incidentType,
     this.fromDate,
     this.toDate,
     required this.page,
@@ -44,6 +56,9 @@ class SearchCriteria extends Equatable {
       personName: json['personName'] as String?,
       roomNumber: json['roomNumber'] as String?,
       status: json['status'] as String?,
+      assignedTo: json['assignedTo'] as String?,
+      actionType: json['actionType'] as String?,
+      incidentType: json['incidentType'] as String?,
       fromDate: json['fromDate'] != null
           ? DateTime.parse(json['fromDate'] as String)
           : null,
@@ -62,6 +77,9 @@ class SearchCriteria extends Equatable {
       'personName': personName,
       'roomNumber': roomNumber,
       'status': status,
+      'assignedTo': assignedTo,
+      'actionType': actionType,
+      'incidentType': incidentType,
       'fromDate': fromDate?.toIso8601String(),
       'toDate': toDate?.toIso8601String(),
       'page': page,
@@ -77,6 +95,9 @@ class SearchCriteria extends Equatable {
     if (personName != null) params['personName'] = personName!;
     if (roomNumber != null) params['roomNumber'] = roomNumber!;
     if (status != null) params['status'] = status!;
+    if (assignedTo != null) params['assignedTo'] = assignedTo!;
+    if (actionType != null) params['actionType'] = actionType!;
+    if (incidentType != null) params['incidentType'] = incidentType!;
     if (fromDate != null) params['fromDate'] = fromDate!.toIso8601String();
     if (toDate != null) params['toDate'] = toDate!.toIso8601String();
     params['page'] = page.toString();
@@ -91,6 +112,9 @@ class SearchCriteria extends Equatable {
     String? personName,
     String? roomNumber,
     String? status,
+    String? assignedTo,
+    String? actionType,
+    String? incidentType,
     DateTime? fromDate,
     DateTime? toDate,
     int? page,
@@ -101,6 +125,9 @@ class SearchCriteria extends Equatable {
       personName: personName ?? this.personName,
       roomNumber: roomNumber ?? this.roomNumber,
       status: status ?? this.status,
+      assignedTo: assignedTo ?? this.assignedTo,
+      actionType: actionType ?? this.actionType,
+      incidentType: incidentType ?? this.incidentType,
       fromDate: fromDate ?? this.fromDate,
       toDate: toDate ?? this.toDate,
       page: page ?? this.page,
@@ -114,6 +141,9 @@ class SearchCriteria extends Equatable {
         personName,
         roomNumber,
         status,
+        assignedTo,
+        actionType,
+        incidentType,
         fromDate,
         toDate,
         page,

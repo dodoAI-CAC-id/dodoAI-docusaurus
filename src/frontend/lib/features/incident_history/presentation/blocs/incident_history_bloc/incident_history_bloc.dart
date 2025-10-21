@@ -29,16 +29,26 @@ class IncidentHistoryBloc
     LoadIncidentsEvent event,
     Emitter<IncidentHistoryState> emit,
   ) async {
+    print('🟢 [BLoC] LoadIncidentsEvent received');
     emit(IncidentHistoryLoading());
+    print('🟢 [BLoC] State changed to Loading');
 
     final result = await getIncidentsUseCase(const GetIncidentsParams());
 
     result.fold(
-      (failure) => emit(IncidentHistoryError(failure.message)),
-      (incidentListResult) => emit(IncidentHistoryLoaded(
-        incidents: incidentListResult.incidents,
-        paginationInfo: incidentListResult.paginationInfo,
-      )),
+      (failure) {
+        print('🔴 [BLoC] Error: ${failure.message}');
+        emit(IncidentHistoryError(failure.message));
+      },
+      (incidentListResult) {
+        print('🟢 [BLoC] Success! Incidents count: ${incidentListResult.incidents.length}');
+        print('🟢 [BLoC] Pagination: ${incidentListResult.paginationInfo.totalCount} total');
+        emit(IncidentHistoryLoaded(
+          incidents: incidentListResult.incidents,
+          paginationInfo: incidentListResult.paginationInfo,
+        ));
+        print('🟢 [BLoC] State changed to Loaded');
+      },
     );
   }
 
@@ -55,6 +65,9 @@ class IncidentHistoryBloc
       personName: event.personName,
       roomNumber: event.roomNumber,
       status: event.status,
+      assignedTo: event.assignedTo,
+      actionType: event.actionType,
+      incidentType: event.incidentType,
       fromDate: event.fromDate,
       toDate: event.toDate,
       page: 1,

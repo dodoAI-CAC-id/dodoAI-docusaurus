@@ -31,6 +31,9 @@ dependencies:
   # 動画再生
   video_player: ^2.8.1
 
+  # QRコード
+  qr_flutter: ^4.1.0
+
   # その他
   intl: ^0.18.1
 

@@ -23,7 +23,12 @@ class IncidentListTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('🟠 [IncidentListTable] build called');
+    print('🟠 [IncidentListTable] incidents.length: ${incidents.length}');
+    print('🟠 [IncidentListTable] incidents.isEmpty: ${incidents.isEmpty}');
+    
     if (incidents.isEmpty) {
+      print('🟠 [IncidentListTable] Showing empty message');
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(32.0),
@@ -35,27 +40,37 @@ class IncidentListTable extends StatelessWidget {
       );
     }
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ヘッダー
-            _buildHeader(),
-            // インシデント行
-            ...incidents.map((incident) => IncidentListRow(
-                  incident: incident,
-                  isSelected: selectedIncidentIds.contains(incident.id),
-                  onSelectionChanged: (selected) {
-                    onSelectionChanged(incident.id, selected ?? false);
-                  },
-                  onPlayVideo: () => onPlayVideo(incident.id),
-                  onDownloadVideo: () => onDownloadVideo(incident.id),
-                )),
-          ],
+    print('🟠 [IncidentListTable] Building table with ${incidents.length} rows');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // ヘッダー（固定）
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: _buildHeader(),
         ),
-      ),
+        // データ行（スクロール可能）
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: incidents.map((incident) => IncidentListRow(
+                      incident: incident,
+                      isSelected: selectedIncidentIds.contains(incident.id),
+                      onSelectionChanged: (selected) {
+                        onSelectionChanged(incident.id, selected ?? false);
+                      },
+                      onPlayVideo: () => onPlayVideo(incident.id),
+                      onDownloadVideo: () => onDownloadVideo(incident.id),
+                    )).toList(),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -67,12 +82,12 @@ class IncidentListTable extends StatelessWidget {
           bottom: BorderSide(color: Colors.grey[400]!, width: 2),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
       child: Row(
         children: [
           // 全選択チェックボックス
           SizedBox(
-            width: 48,
+            width: 60,
             child: Checkbox(
               value: selectedIncidentIds.length == incidents.length &&
                   incidents.isNotEmpty,
@@ -85,12 +100,29 @@ class IncidentListTable extends StatelessWidget {
           ),
           const SizedBox(width: 16),
           // ヘッダーラベル
-          _buildHeaderCell('検知日時', 150),
-          _buildHeaderCell('異常タイプ', 100),
-          _buildHeaderCell('見守り対象者', 120),
-          _buildHeaderCell('部屋番号', 80),
-          _buildHeaderCell('ステータス', 100),
-          _buildHeaderCell('操作', 120),
+          _buildHeaderCell('No', 60),
+          const SizedBox(width: 16),
+          _buildHeaderCell('日付', 120),
+          const SizedBox(width: 16),
+          _buildHeaderCell('発生時間', 100),
+          const SizedBox(width: 16),
+          _buildHeaderCell('部屋/ベッド', 110),
+          const SizedBox(width: 16),
+          _buildHeaderCell('見守り対象者', 130),
+          const SizedBox(width: 16),
+          _buildHeaderCell('異常検出動作', 120),
+          const SizedBox(width: 16),
+          _buildHeaderCell('担当者', 110),
+          const SizedBox(width: 16),
+          _buildHeaderCell('操作', 100),
+          const SizedBox(width: 16),
+          _buildHeaderCell('対応開始時間', 140),
+          const SizedBox(width: 16),
+          _buildHeaderCell('対応合計時間', 120),
+          const SizedBox(width: 16),
+          _buildHeaderCell('エビデンス動画', 140),
+          const SizedBox(width: 16),
+          _buildHeaderCell('アクション', 120),
         ],
       ),
     );

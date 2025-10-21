@@ -44,6 +44,12 @@ class Incident extends Equatable {
   /// エピソード記録（オプション）
   final String? episodeNote;
 
+  /// 履歴番号（表示用）
+  final int? historyNumber;
+
+  /// 操作タイプ（対応、完了、訪室不要、対応不要、誤検知）
+  final String? actionType;
+
   const Incident({
     required this.id,
     required this.detectedAt,
@@ -59,6 +65,8 @@ class Incident extends Equatable {
     this.responseStartedAt,
     this.responseCompletedAt,
     this.episodeNote,
+    this.historyNumber,
+    this.actionType,
   });
 
   /// JSONからIncidentを生成
@@ -121,5 +129,7 @@ class Incident extends Equatable {
         responseStartedAt,
         responseCompletedAt,
         episodeNote,
+        historyNumber,
+        actionType,
       ];
 }

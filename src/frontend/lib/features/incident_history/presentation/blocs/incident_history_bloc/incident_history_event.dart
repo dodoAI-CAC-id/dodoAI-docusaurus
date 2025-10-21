@@ -17,6 +17,9 @@ class SearchIncidentsEvent extends IncidentHistoryEvent {
   final String? personName;
   final String? roomNumber;
   final String? status;
+  final String? assignedTo;
+  final String? actionType;
+  final String? incidentType;
   final DateTime? fromDate;
   final DateTime? toDate;
 
@@ -25,6 +28,9 @@ class SearchIncidentsEvent extends IncidentHistoryEvent {
     this.personName,
     this.roomNumber,
     this.status,
+    this.assignedTo,
+    this.actionType,
+    this.incidentType,
     this.fromDate,
     this.toDate,
   });
@@ -35,6 +41,9 @@ class SearchIncidentsEvent extends IncidentHistoryEvent {
         personName,
         roomNumber,
         status,
+        assignedTo,
+        actionType,
+        incidentType,
         fromDate,
         toDate,
       ];

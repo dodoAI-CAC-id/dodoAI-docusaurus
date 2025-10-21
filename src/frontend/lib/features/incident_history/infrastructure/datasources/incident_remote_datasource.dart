@@ -38,7 +38,18 @@ class IncidentRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      return List<Map<String, dynamic>>.from(response.data as List);
+      // response.dataの型チェックを追加
+      final data = response.data;
+      if (data is List) {
+        return List<Map<String, dynamic>>.from(
+          data.map((item) => item as Map<String, dynamic>),
+        );
+      } else if (data is String) {
+        // HTMLエラーページなどが返ってきた場合
+        throw Exception('Unexpected response format: HTML or text received');
+      } else {
+        throw Exception('Unexpected response format: ${data.runtimeType}');
+      }
     } else {
       throw Exception('Failed to load incidents: ${response.statusCode}');
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mamoai/features/incident_history/domain/entities/incident.dart';
 import 'package:mamoai/shared/presentation/components/atoms/app_checkbox.dart';
 import 'package:mamoai/shared/presentation/components/atoms/app_icon_button.dart';
@@ -27,7 +28,7 @@ class IncidentListRow extends StatelessWidget {
       onTap: () => onSelectionChanged(!isSelected),
       hoverColor: Colors.grey[100],
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(color: Colors.grey[300]!),
@@ -38,60 +39,124 @@ class IncidentListRow extends StatelessWidget {
           children: [
             // チェックボックス
             SizedBox(
-              width: 48,
+              width: 60,
               child: AppCheckbox(
                 value: isSelected,
                 onChanged: onSelectionChanged,
               ),
             ),
+            const SizedBox(width: 16),
             
-            // 日時
-            Expanded(
-              flex: 2,
+            // No（履歴番号）
+            SizedBox(
+              width: 60,
               child: AppText(
-                text: _formatDateTime(incident.detectedAt),
+                text: incident.historyNumber?.toString() ?? '-',
                 type: TextStyleType.body1,
               ),
             ),
+            const SizedBox(width: 16),
             
-            // 異常タイプ
-            Expanded(
-              flex: 1,
+            // 日付
+            SizedBox(
+              width: 120,
               child: AppText(
-                text: incident.type,
+                text: _formatDate(incident.detectedAt),
                 type: TextStyleType.body1,
               ),
             ),
+            const SizedBox(width: 16),
             
-            // 対象者名
-            Expanded(
-              flex: 2,
+            // 発生時間
+            SizedBox(
+              width: 100,
               child: AppText(
-                text: incident.personName,
+                text: _formatTime(incident.detectedAt),
                 type: TextStyleType.body1,
               ),
             ),
+            const SizedBox(width: 16),
             
-            // 部屋番号
-            Expanded(
-              flex: 1,
+            // 部屋/ベッド番号
+            SizedBox(
+              width: 110,
               child: AppText(
                 text: incident.roomNumber,
                 type: TextStyleType.body1,
               ),
             ),
+            const SizedBox(width: 16),
             
-            // ステータス
-            Expanded(
-              flex: 1,
-              child: _buildStatusChip(incident.status),
+            // 見守り対象者名
+            SizedBox(
+              width: 130,
+              child: AppText(
+                text: incident.personName,
+                type: TextStyleType.body1,
+              ),
             ),
+            const SizedBox(width: 16),
             
-            // アクションボタン
+            // 異常検出動作
+            SizedBox(
+              width: 120,
+              child: AppText(
+                text: incident.type,
+                type: TextStyleType.body1,
+              ),
+            ),
+            const SizedBox(width: 16),
+            
+            // 担当者
             SizedBox(
               width: 110,
+              child: AppText(
+                text: incident.assignedTo ?? '-',
+                type: TextStyleType.body1,
+              ),
+            ),
+            const SizedBox(width: 16),
+            
+            // 操作
+            SizedBox(
+              width: 100,
+              child: AppText(
+                text: incident.actionType ?? '-',
+                type: TextStyleType.body1,
+              ),
+            ),
+            const SizedBox(width: 16),
+            
+            // 対応開始時間
+            SizedBox(
+              width: 140,
+              child: AppText(
+                text: incident.responseStartedAt != null
+                    ? _formatDateTime(incident.responseStartedAt!)
+                    : '-',
+                type: TextStyleType.body1,
+              ),
+            ),
+            const SizedBox(width: 16),
+            
+            // 対応合計時間
+            SizedBox(
+              width: 120,
+              child: AppText(
+                text: _calculateDuration(
+                  incident.responseStartedAt,
+                  incident.responseCompletedAt,
+                ),
+                type: TextStyleType.body1,
+              ),
+            ),
+            const SizedBox(width: 16),
+            
+            // エビデンス動画（再生・ダウンロードボタン）
+            SizedBox(
+              width: 140,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   AppIconButton(
                     icon: Icons.play_circle,
@@ -109,63 +174,65 @@ class IncidentListRow extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(width: 16),
+            
+            // アクション（星型・ゴミ箱ボタン）
+            SizedBox(
+              width: 120,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AppIconButton(
+                    icon: Icons.star_border,
+                    tooltip: 'お気に入り',
+                    size: 20.0,
+                    onPressed: () {
+                      // TODO: お気に入り機能実装
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  AppIconButton(
+                    icon: Icons.delete_outline,
+                    tooltip: '削除',
+                    size: 20.0,
+                    onPressed: () {
+                      // TODO: 削除機能実装
+                    },
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  /// 日時をフォーマット（yyyy/MM/dd HH:mm）
+  /// 日付をフォーマット（yyyy/MM/dd）
+  String _formatDate(DateTime dateTime) {
+    return DateFormat('yyyy/MM/dd').format(dateTime);
+  }
+
+  /// 時間をフォーマット（HH:mm:ss）
+  String _formatTime(DateTime dateTime) {
+    return DateFormat('HH:mm:ss').format(dateTime);
+  }
+
+  /// 日時をフォーマット（yyyy/MM/dd HH:mm:ss）
   String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.year}/'
-        '${dateTime.month.toString().padLeft(2, '0')}/'
-        '${dateTime.day.toString().padLeft(2, '0')} '
-        '${dateTime.hour.toString().padLeft(2, '0')}:'
-        '${dateTime.minute.toString().padLeft(2, '0')}';
+    return DateFormat('yyyy/MM/dd HH:mm:ss').format(dateTime);
   }
 
-  /// ステータスチップを構築
-  Widget _buildStatusChip(String status) {
-    final statusInfo = _getStatusInfo(status);
+  /// 対応合計時間を計算（mm:ss形式）
+  String _calculateDuration(DateTime? start, DateTime? end) {
+    if (start == null) return '-';
     
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-      decoration: BoxDecoration(
-        color: statusInfo['color'],
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: AppText(
-        text: statusInfo['text'],
-        type: TextStyleType.body2,
-        color: Colors.white,
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  /// ステータス情報を取得
-  Map<String, dynamic> _getStatusInfo(String status) {
-    switch (status) {
-      case 'open':
-        return {
-          'text': '未対応',
-          'color': Colors.red[400],
-        };
-      case 'resolved':
-        return {
-          'text': '対応済み',
-          'color': Colors.green[400],
-        };
-      case 'monitoring':
-        return {
-          'text': '監視中',
-          'color': Colors.orange[400],
-        };
-      default:
-        return {
-          'text': status,
-          'color': Colors.grey[400],
-        };
-    }
+    final endTime = end ?? DateTime.now();
+    final duration = endTime.difference(start);
+    
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds % 60;
+    
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 }
