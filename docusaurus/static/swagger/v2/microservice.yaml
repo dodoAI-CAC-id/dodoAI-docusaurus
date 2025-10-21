@@ -91,7 +91,20 @@ paths:
           description: 該当イベント
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Incident' }
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Incident'
+                  - type: object
+                    properties:
+                      pictuers:
+                        type: object
+                        properties:
+                          pictureAtDetection:
+                            type: string
+                            description: "検知画像(検知時) base64形式"
+                          pictureBeforeDetection:
+                            type: string
+                            description: "検知画像(検知直前) base64形式"
 
     patch:
       tags: [Incident]
@@ -201,13 +214,25 @@ paths:
           schema: { type: string }
       responses:
         '200':
-          description: 履歴リスト
+          description: 履歴リスト（各履歴に部屋/ベッド名称または番号、見守り対象者名、異常検出動作を含む）
           content:
             application/json:
               schema:
                 type: array
-                items: { $ref: '#/components/schemas/Action' }
-
+                items: 
+                  allOf:
+                    - $ref: '#/components/schemas/Action'
+                    - type: object
+                      properties:
+                        roomBedNameOrNumber:
+                          type: string
+                          description: "部屋またはベッドの名前・番号"
+                        personName:
+                          type: string
+                          description: "見守り対象者名"
+                        incidentDetectionType:
+                          type: string
+                          description: "異常検出動作"
     post:
       tags: [Action]
       summary: 対応登録/進捗切替
