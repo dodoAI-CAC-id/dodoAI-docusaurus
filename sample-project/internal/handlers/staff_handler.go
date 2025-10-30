@@ -33,12 +33,16 @@ func (h *StaffHandler) GetStaff(c *gin.Context) {
 	staffID := c.Param("id")
 
 	staff, err := models.GetStaffByID(h.db, staffID)
-	if err == sql.ErrNoRows || staff == nil {
-		utils.ErrorResponse(c, http.StatusNotFound, "Staff not found")
-		return
-	}
+
+	// 先に一般的なデータベースエラーをチェック
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to retrieve staff: "+err.Error())
+		return
+	}
+
+	// その後、データが見つからない場合をチェック
+	if staff == nil {
+		utils.ErrorResponse(c, http.StatusNotFound, "Staff not found")
 		return
 	}
 

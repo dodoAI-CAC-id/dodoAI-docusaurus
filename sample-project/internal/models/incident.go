@@ -29,10 +29,10 @@ type Incident struct {
 
 // IncidentCreate represents the input for creating a new incident
 type IncidentCreate struct {
-	DetectedAt      time.Time `json:"detectedAt" binding:"required"`
-	Type            string    `json:"type" binding:"required"`
-	PersonID        string    `json:"personId" binding:"required"`
-	CameraID        string    `json:"cameraId" binding:"required"`
+	DetectedAt      time.Time `json:"detectedAt"`
+	Type            string    `json:"type"`
+	PersonID        string    `json:"personId"`
+	CameraID        string    `json:"cameraId"`
 	RoomID          *string   `json:"roomId,omitempty"`
 	DetectionAreaID *string   `json:"detectionAreaId,omitempty"`
 	Description     *string   `json:"description,omitempty"`

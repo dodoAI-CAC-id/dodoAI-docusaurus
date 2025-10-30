@@ -23,8 +23,8 @@ type Notification struct {
 
 // NotificationCreate represents the input for creating a notification
 type NotificationCreate struct {
-	IncidentID       string   `json:"incidentId" binding:"required"`
-	SentToStaffIDs   []string `json:"sentToStaffIds" binding:"required"`
+	IncidentID       string   `json:"incidentId"`
+	SentToStaffIDs   []string `json:"sentToStaffIds"`
 	NotificationType *string  `json:"notificationType,omitempty"`
 	DeliveryRule     *string  `json:"deliveryRule,omitempty"`
 	ActionRequired   *bool    `json:"actionRequired,omitempty"`

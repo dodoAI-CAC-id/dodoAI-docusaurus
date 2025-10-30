@@ -39,7 +39,7 @@ func GetAllStaffs(db *sql.DB) ([]Staff, error) {
 	}
 	defer rows.Close()
 
-	var staffs []Staff
+	staffs := make([]Staff, 0)
 	for rows.Next() {
 		var staff Staff
 		err := rows.Scan(
@@ -104,7 +104,7 @@ func GetAllDepartments(db *sql.DB) ([]Department, error) {
 	}
 	defer rows.Close()
 
-	var departments []Department
+	departments := make([]Department, 0)
 	for rows.Next() {
 		var dept Department
 		err := rows.Scan(

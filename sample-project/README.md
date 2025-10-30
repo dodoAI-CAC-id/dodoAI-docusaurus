@@ -320,6 +320,99 @@ docker-compose up -d --build api
 docker-compose down -v
 ```
 
+## テスト実行
+
+### 前提条件
+
+テストを実行する前に、必要な依存パッケージがインストールされていることを確認してください。
+
+```bash
+# 依存パッケージのインストール
+go mod download
+```
+
+### 基本コマンド
+
+#### 全テスト実行
+```bash
+# すべてのテストを実行
+go test -v ./...
+```
+
+#### レイヤー別テスト実行
+
+**モデル層のテストのみ**
+```bash
+go test -v ./internal/models/...
+```
+
+**ハンドラー層のテストのみ**
+```bash
+go test -v ./internal/handlers/...
+```
+
+**E2Eテストのみ**
+```bash
+go test -v ./test/e2e/...
+```
+
+### カバレッジ測定
+
+#### カバレッジ付きテスト実行
+```bash
+# カバレッジを測定しながらテスト実行
+go test -coverprofile=coverage.out ./...
+```
+
+#### カバレッジレポート生成
+
+**HTMLレポート生成**
+```bash
+# HTMLレポートを生成して表示
+go test -coverprofile=coverage.out ./...
+go tool cover -html=coverage.out -o coverage.html
+```
+
+**ターミナルでカバレッジ確認**
+```bash
+# 関数ごとのカバレッジを表示
+go tool cover -func=coverage.out
+```
+
+### その他の便利なテストコマンド
+
+#### 特定のテストケースのみ実行
+```bash
+# テスト名を指定して実行
+go test -v -run TestFunctionName ./internal/models/...
+```
+
+#### レースコンディション検出
+```bash
+# データ競合を検出
+go test -race ./...
+```
+
+#### 並列実行
+```bash
+# 並列度を指定してテスト実行
+go test -v -parallel 4 ./...
+```
+
+#### ベンチマークテスト
+```bash
+# ベンチマークテストを実行
+go test -bench=. -benchmem ./...
+```
+
+### テストカバレッジ目標
+
+| レイヤー | 目標カバレッジ |
+|---------|--------------|
+| モデル層 | 80%以上 |
+| ハンドラー層 | 75%以上 |
+| 全体 | 80%以上 |
+
 ## テスト例
 
 ### 基本フロー

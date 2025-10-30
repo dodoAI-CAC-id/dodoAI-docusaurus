@@ -32,7 +32,7 @@ func GetAllRooms(db *sql.DB) ([]Room, error) {
 	}
 	defer rows.Close()
 
-	var rooms []Room
+	rooms := make([]Room, 0)
 	for rows.Next() {
 		var room Room
 		err := rows.Scan(
@@ -52,7 +52,7 @@ func GetAllRooms(db *sql.DB) ([]Room, error) {
 		if err != nil {
 			return nil, err
 		}
-		var personIDs []string
+		personIDs := make([]string, 0)
 		for personRows.Next() {
 			var personID string
 			if err := personRows.Scan(&personID); err != nil {
@@ -70,7 +70,7 @@ func GetAllRooms(db *sql.DB) ([]Room, error) {
 		if err != nil {
 			return nil, err
 		}
-		var cameraIDs []string
+		cameraIDs := make([]string, 0)
 		for cameraRows.Next() {
 			var cameraID string
 			if err := cameraRows.Scan(&cameraID); err != nil {
@@ -120,7 +120,7 @@ func GetRoomByID(db *sql.DB, id string) (*Room, error) {
 	}
 	defer personRows.Close()
 
-	var personIDs []string
+	personIDs := make([]string, 0)
 	for personRows.Next() {
 		var personID string
 		if err := personRows.Scan(&personID); err != nil {
@@ -138,7 +138,7 @@ func GetRoomByID(db *sql.DB, id string) (*Room, error) {
 	}
 	defer cameraRows.Close()
 
-	var cameraIDs []string
+	cameraIDs := make([]string, 0)
 	for cameraRows.Next() {
 		var cameraID string
 		if err := cameraRows.Scan(&cameraID); err != nil {
@@ -177,7 +177,7 @@ func GetAllCameraDevices(db *sql.DB) ([]CameraDevice, error) {
 	}
 	defer rows.Close()
 
-	var cameras []CameraDevice
+	cameras := make([]CameraDevice, 0)
 	for rows.Next() {
 		var camera CameraDevice
 		err := rows.Scan(
@@ -261,7 +261,7 @@ func GetAllDetectionAreas(db *sql.DB, cameraID *string) ([]DetectionArea, error)
 	}
 	defer rows.Close()
 
-	var areas []DetectionArea
+	areas := make([]DetectionArea, 0)
 	for rows.Next() {
 		var area DetectionArea
 		err := rows.Scan(

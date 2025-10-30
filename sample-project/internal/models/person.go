@@ -20,7 +20,7 @@ type Person struct {
 
 // PersonCreate represents the input for creating a person
 type PersonCreate struct {
-	Name     string     `json:"name" binding:"required"`
+	Name     string     `json:"name"`
 	Kana     *string    `json:"kana,omitempty"`
 	Birthday *time.Time `json:"birthday,omitempty"`
 	Gender   *string    `json:"gender,omitempty"`
@@ -52,7 +52,7 @@ func GetAllPersons(db *sql.DB) ([]Person, error) {
 	}
 	defer rows.Close()
 
-	var persons []Person
+	persons := make([]Person, 0)
 	for rows.Next() {
 		var person Person
 		err := rows.Scan(
