@@ -33,12 +33,12 @@ func (h *RoomHandler) GetRoom(c *gin.Context) {
 	roomID := c.Param("id")
 
 	room, err := models.GetRoomByID(h.db, roomID)
-	if err == sql.ErrNoRows || room == nil {
-		utils.ErrorResponse(c, http.StatusNotFound, "Room not found")
-		return
-	}
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to retrieve room: "+err.Error())
+		return
+	}
+	if room == nil {
+		utils.ErrorResponse(c, http.StatusNotFound, "Room not found")
 		return
 	}
 
@@ -61,12 +61,12 @@ func (h *RoomHandler) GetCameraDevice(c *gin.Context) {
 	cameraID := c.Param("id")
 
 	camera, err := models.GetCameraDeviceByID(h.db, cameraID)
-	if err == sql.ErrNoRows || camera == nil {
-		utils.ErrorResponse(c, http.StatusNotFound, "Camera device not found")
-		return
-	}
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to retrieve camera device: "+err.Error())
+		return
+	}
+	if camera == nil {
+		utils.ErrorResponse(c, http.StatusNotFound, "Camera device not found")
 		return
 	}
 

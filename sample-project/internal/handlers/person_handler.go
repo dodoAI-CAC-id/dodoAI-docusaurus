@@ -33,12 +33,12 @@ func (h *PersonHandler) GetPerson(c *gin.Context) {
 	personID := c.Param("id")
 
 	person, err := models.GetPersonByID(h.db, personID)
-	if err == sql.ErrNoRows || person == nil {
-		utils.ErrorResponse(c, http.StatusNotFound, "Person not found")
-		return
-	}
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to retrieve person: "+err.Error())
+		return
+	}
+	if person == nil {
+		utils.ErrorResponse(c, http.StatusNotFound, "Person not found")
 		return
 	}
 

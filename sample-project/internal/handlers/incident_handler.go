@@ -104,12 +104,16 @@ func (h *IncidentHandler) GetIncident(c *gin.Context) {
 	incidentID := c.Param("id")
 
 	incident, err := models.GetIncidentByID(h.db, incidentID)
-	if err == sql.ErrNoRows {
-		utils.ErrorResponse(c, http.StatusNotFound, "Incident not found")
+	if err != nil {
+		if err == sql.ErrNoRows {
+			utils.ErrorResponse(c, http.StatusNotFound, "Incident not found")
+			return
+		}
+		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to retrieve incident: "+err.Error())
 		return
 	}
-	if err != nil {
-		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to retrieve incident: "+err.Error())
+	if incident == nil {
+		utils.ErrorResponse(c, http.StatusNotFound, "Incident not found")
 		return
 	}
 
@@ -127,12 +131,16 @@ func (h *IncidentHandler) UpdateIncident(c *gin.Context) {
 	}
 
 	incident, err := models.UpdateIncident(h.db, incidentID, input)
-	if err == sql.ErrNoRows {
-		utils.ErrorResponse(c, http.StatusNotFound, "Incident not found")
+	if err != nil {
+		if err == sql.ErrNoRows {
+			utils.ErrorResponse(c, http.StatusNotFound, "Incident not found")
+			return
+		}
+		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to update incident: "+err.Error())
 		return
 	}
-	if err != nil {
-		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to update incident: "+err.Error())
+	if incident == nil {
+		utils.ErrorResponse(c, http.StatusNotFound, "Incident not found")
 		return
 	}
 

@@ -74,7 +74,7 @@ func (h *NotificationHandler) MarkNotificationAsRead(c *gin.Context) {
 	notificationID := c.Param("id")
 
 	var input struct {
-		StaffID string `json:"staffId" binding:"required"`
+		StaffID string `json:"staffId"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -93,7 +93,10 @@ func (h *NotificationHandler) MarkNotificationAsRead(c *gin.Context) {
 		return
 	}
 
-	utils.MessageResponse(c, http.StatusOK, "Notification marked as read successfully")
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Notification marked as read successfully",
+	})
 }
 
 // EscalateNotification handles POST /api/v2/notifications/:id/escalate
@@ -106,5 +109,8 @@ func (h *NotificationHandler) EscalateNotification(c *gin.Context) {
 		return
 	}
 
-	utils.MessageResponse(c, http.StatusOK, "Notification escalated successfully")
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Notification escalated successfully",
+	})
 }

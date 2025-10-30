@@ -20,8 +20,8 @@ type Action struct {
 
 // ActionCreate represents the input for creating an action
 type ActionCreate struct {
-	StaffID    string  `json:"staffId" binding:"required"`
-	ActionType string  `json:"actionType" binding:"required"`
+	StaffID    string  `json:"staffId"`
+	ActionType string  `json:"actionType"`
 	Note       *string `json:"note,omitempty"`
 }
 
@@ -48,7 +48,7 @@ func GetActionsByIncidentID(db *sql.DB, incidentID string) ([]Action, error) {
 	}
 	defer rows.Close()
 
-	var actions []Action
+	actions := make([]Action, 0)
 	for rows.Next() {
 		var action Action
 		err := rows.Scan(
@@ -94,7 +94,7 @@ func GetActionsWithDetailsByIncidentID(db *sql.DB, incidentID string) ([]ActionW
 	}
 	defer rows.Close()
 
-	var actions []ActionWithDetails
+	actions := make([]ActionWithDetails, 0)
 	for rows.Next() {
 		var action ActionWithDetails
 		err := rows.Scan(
