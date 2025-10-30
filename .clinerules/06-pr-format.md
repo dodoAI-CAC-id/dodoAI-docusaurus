@@ -4,8 +4,10 @@ Purpose:
 - Enforce a single, consistent PR description format across this repository.
 - Applies to all contributors and all PRs.
 
+<!--
 Language:
 - Write PR descriptions in English unless explicitly requested otherwise.
+-->
 
 Cline Rule (MUST):
 - When asked to draft a PR description, Cline MUST read and follow this file (.clinerules/02-pr-format.md) exactly.
