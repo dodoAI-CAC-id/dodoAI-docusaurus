@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mamoai/features/incident_history/presentation/blocs/incident_history_bloc/incident_history_bloc.dart';
@@ -5,8 +6,10 @@ import 'package:mamoai/features/incident_history/presentation/blocs/incident_his
 import 'package:mamoai/features/incident_history/presentation/blocs/incident_history_bloc/incident_history_state.dart';
 import 'package:mamoai/features/incident_history/application/usecases/get_incidents_usecase.dart';
 import 'package:mamoai/features/incident_history/application/usecases/get_video_usecase.dart';
-import 'package:mamoai/features/incident_history/infrastructure/repositories/mock_incident_repository.dart';
-import 'package:mamoai/features/incident_history/infrastructure/repositories/mock_video_repository.dart';
+import 'package:mamoai/features/incident_history/infrastructure/datasources/incident_remote_datasource.dart';
+import 'package:mamoai/features/incident_history/infrastructure/datasources/video_remote_datasource.dart';
+import 'package:mamoai/features/incident_history/infrastructure/repositories/incident_repository_impl.dart';
+import 'package:mamoai/features/incident_history/infrastructure/repositories/video_repository_impl.dart';
 import 'package:mamoai/features/incident_history/presentation/widgets/organisms/search_panel.dart';
 import 'package:mamoai/features/incident_history/presentation/widgets/organisms/incident_list_table.dart';
 import 'package:mamoai/features/incident_history/presentation/widgets/organisms/pagination_controls.dart';
@@ -21,9 +24,18 @@ class IncidentHistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // モックリポジトリを使用（APIサーバーなしでUIを確認）
-    final incidentRepository = MockIncidentRepository();
-    final videoRepository = MockVideoRepository();
+    // 🔄 APIリポジトリを使用（実際のバックエンドAPIと通信）
+    final dio = Dio();
+    final incidentRemoteDataSource = IncidentRemoteDataSource(dio);
+    final videoRemoteDataSource = VideoRemoteDataSource(dio);
+    
+    final incidentRepository = IncidentRepositoryImpl(
+      remoteDataSource: incidentRemoteDataSource,
+    );
+    final videoRepository = VideoRepositoryImpl(
+      remoteDataSource: videoRemoteDataSource,
+    );
+    
     final getIncidentsUseCase = GetIncidentsUseCase(incidentRepository);
     final getVideoUseCase = GetVideoUseCase(videoRepository);
 
