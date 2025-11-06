@@ -22,6 +22,17 @@ type Incident struct {
 	CreatedBy       *string         `json:"createdBy,omitempty"`
 	CreatedAt       time.Time       `json:"createdAt"`
 	UpdatedAt       time.Time       `json:"updatedAt"`
+	
+	// Display fields (populated via JOIN)
+	PersonName      *string         `json:"personName,omitempty"`
+	RoomNumber      *string         `json:"roomNumber,omitempty"`
+	
+	// Response information (from actions table)
+	AssignedTo             *string    `json:"assignedTo,omitempty"`
+	ActionType             *string    `json:"actionType,omitempty"`
+	ResponseStartedAt      *time.Time `json:"responseStartedAt,omitempty"`
+	ResponseCompletedAt    *time.Time `json:"responseCompletedAt,omitempty"`
+	
 	Notifications   []Notification  `json:"notifications,omitempty"`
 	Actions         []Action        `json:"actions,omitempty"`
 	Videos          []IncidentVideo `json:"videos,omitempty"`
@@ -60,39 +71,65 @@ type IncidentPictures struct {
 // GetAllIncidents retrieves incidents with optional filters
 func GetAllIncidents(db *sql.DB, personID, status *string, from, to *time.Time) ([]Incident, error) {
 	query := `
-		SELECT id, detected_at, type, status, person_id, camera_id, room_id, 
-		       detection_area_id, description, created_by, created_at, updated_at
-		FROM incidents
+		SELECT 
+			i.id, i.detected_at, i.type, i.status, 
+			i.person_id, i.camera_id, i.room_id, 
+			i.detection_area_id, i.description, i.created_by, 
+			i.created_at, i.updated_at,
+			p.name as person_name,
+			r.room_number as room_number,
+			first_action.staff_name as assigned_to,
+			first_action.action_type as action_type,
+			first_action.start_at as response_started_at,
+			last_action.end_at as response_completed_at
+		FROM incidents i
+		LEFT JOIN persons p ON i.person_id = p.id
+		LEFT JOIN rooms r ON i.room_id = r.id
+		LEFT JOIN LATERAL (
+			SELECT s.name as staff_name, a.action_type, a.start_at
+			FROM actions a
+			JOIN staffs s ON a.staff_id = s.id
+			WHERE a.incident_id = i.id
+			ORDER BY a.created_at ASC
+			LIMIT 1
+		) first_action ON true
+		LEFT JOIN LATERAL (
+			SELECT a.end_at
+			FROM actions a
+			WHERE a.incident_id = i.id AND a.end_at IS NOT NULL
+			ORDER BY a.created_at DESC
+			LIMIT 1
+		) last_action ON true
 		WHERE 1=1
 	`
 	args := []interface{}{}
 	argIdx := 1
 
 	if personID != nil {
-		query += ` AND person_id = $` + string(rune('0'+argIdx))
+		query += ` AND i.person_id = $` + string(rune('0'+argIdx))
 		args = append(args, *personID)
 		argIdx++
 	}
 
 	if status != nil {
-		query += ` AND status = $` + string(rune('0'+argIdx))
+		query += ` AND i.status = $` + string(rune('0'+argIdx))
 		args = append(args, *status)
 		argIdx++
 	}
 
 	if from != nil {
-		query += ` AND detected_at >= $` + string(rune('0'+argIdx))
+		query += ` AND i.detected_at >= $` + string(rune('0'+argIdx))
 		args = append(args, *from)
 		argIdx++
 	}
 
 	if to != nil {
-		query += ` AND detected_at <= $` + string(rune('0'+argIdx))
+		query += ` AND i.detected_at <= $` + string(rune('0'+argIdx))
 		args = append(args, *to)
 		argIdx++
 	}
 
-	query += ` ORDER BY detected_at DESC`
+	query += ` ORDER BY i.detected_at DESC`
 
 	rows, err := db.Query(query, args...)
 	if err != nil {
@@ -116,6 +153,12 @@ func GetAllIncidents(db *sql.DB, personID, status *string, from, to *time.Time) 
 			&incident.CreatedBy,
 			&incident.CreatedAt,
 			&incident.UpdatedAt,
+			&incident.PersonName,
+			&incident.RoomNumber,
+			&incident.AssignedTo,
+			&incident.ActionType,
+			&incident.ResponseStartedAt,
+			&incident.ResponseCompletedAt,
 		)
 		if err != nil {
 			return nil, err
