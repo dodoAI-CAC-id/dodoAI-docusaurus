@@ -39,35 +39,45 @@ Go言語とPostgreSQLを使用した介護施設向け異常検知・通知・�
 
 ```
 sample-project/
-├── cmd/                         # バックエンド
-│   └── api/
-│       └── main.go              # エントリーポイント
-├── internal/                    # バックエンド
-│   ├── database/
-│   │   └── postgres.go          # DB接続管理
-│   ├── handlers/                # HTTPハンドラー
-│   │   ├── incident_handler.go
-│   │   ├── notification_handler.go
-│   │   ├── action_handler.go
-│   │   ├── person_handler.go
-│   │   ├── staff_handler.go
-│   │   ├── room_handler.go
-│   │   ├── incident_video_handler.go
-│   │   ├── audit_log_handler.go
-│   │   └── configuration_handler.go
-│   ├── models/                  # データモデル
-│   │   ├── incident.go
-│   │   ├── notification.go
-│   │   ├── action.go
-│   │   ├── person.go
-│   │   ├── staff.go
-│   │   ├── room.go
-│   │   ├── incident_video.go
-│   │   └── audit_log.go
-│   ├── middleware/
-│   │   └── audit.go             # 監査ログミドルウェア
-│   └── utils/
-│       └── response.go          # 共通レスポンス処理
+├── backend/                     # バックエンド（Go API）
+│   ├── cmd/
+│   │   └── api/
+│   │       └── main.go          # エントリーポイント
+│   ├── internal/
+│   │   ├── database/
+│   │   │   └── postgres.go      # DB接続管理
+│   │   ├── handlers/            # HTTPハンドラー
+│   │   │   ├── incident_handler.go
+│   │   │   ├── notification_handler.go
+│   │   │   ├── action_handler.go
+│   │   │   ├── person_handler.go
+│   │   │   ├── staff_handler.go
+│   │   │   ├── room_handler.go
+│   │   │   ├── incident_video_handler.go
+│   │   │   ├── audit_log_handler.go
+│   │   │   └── configuration_handler.go
+│   │   ├── models/              # データモデル
+│   │   │   ├── incident.go
+│   │   │   ├── notification.go
+│   │   │   ├── action.go
+│   │   │   ├── person.go
+│   │   │   ├── staff.go
+│   │   │   ├── room.go
+│   │   │   ├── incident_video.go
+│   │   │   └── audit_log.go
+│   │   ├── middleware/
+│   │   │   └── audit.go         # 監査ログミドルウェア
+│   │   └── utils/
+│   │       └── response.go      # 共通レスポンス処理
+│   ├── migrations/
+│   │   └── 001_create_base_tables.sql  # DBスキーマ
+│   ├── docker/
+│   │   ├── Dockerfile
+│   │   └── init.sql
+│   ├── test/                    # テスト
+│   ├── go.mod
+│   ├── go.sum
+│   └── .env.example
 ├── frontend/                    # フロントエンド（Flutter）
 │   ├── lib/
 │   │   ├── features/
@@ -82,14 +92,8 @@ sample-project/
 │   ├── widgetbook/              # UIカタログ
 │   ├── pubspec.yaml
 │   └── README.md
-├── migrations/
-│   └── 001_create_base_tables.sql  # DBスキーマ
-├── docker/
-│   ├── Dockerfile
-│   └── init.sql
 ├── docker-compose.yml
-├── go.mod
-├── .env.example
+├── .gitignore
 └── README.md
 ```
 
@@ -110,13 +114,15 @@ sample-project/
 #### 1. 環境変数の設定
 
 ```bash
+cd backend
 cp .env.example .env
+cd ..
 ```
 
 #### 2. Docker Composeでビルド・起動
 
 ```bash
-# イメージのビルド
+# プロジェクトルートから実行
 docker-compose build
 
 # コンテナの起動
@@ -126,7 +132,14 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
-#### 3. 動作確認
+#### 3. ローカル開発（Dockerを使わない場合）
+
+```bash
+cd backend
+go run cmd/api/main.go
+```
+
+#### 4. 動作確認
 
 ```bash
 # スタッフ一覧取得
@@ -406,7 +419,8 @@ go mod download
 
 #### 全テスト実行
 ```bash
-# すべてのテストを実行
+# backendディレクトリから実行
+cd backend
 go test -v ./...
 ```
 
@@ -414,16 +428,19 @@ go test -v ./...
 
 **モデル層のテストのみ**
 ```bash
+cd backend
 go test -v ./internal/models/...
 ```
 
 **ハンドラー層のテストのみ**
 ```bash
+cd backend
 go test -v ./internal/handlers/...
 ```
 
 **E2Eテストのみ**
 ```bash
+cd backend
 go test -v ./test/e2e/...
 ```
 
@@ -431,7 +448,8 @@ go test -v ./test/e2e/...
 
 #### カバレッジ付きテスト実行
 ```bash
-# カバレッジを測定しながらテスト実行
+# backendディレクトリから実行
+cd backend
 go test -coverprofile=coverage.out ./...
 ```
 
@@ -439,14 +457,14 @@ go test -coverprofile=coverage.out ./...
 
 **HTMLレポート生成**
 ```bash
-# HTMLレポートを生成して表示
+cd backend
 go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out -o coverage.html
 ```
 
 **ターミナルでカバレッジ確認**
 ```bash
-# 関数ごとのカバレッジを表示
+cd backend
 go tool cover -func=coverage.out
 ```
 
@@ -454,25 +472,25 @@ go tool cover -func=coverage.out
 
 #### 特定のテストケースのみ実行
 ```bash
-# テスト名を指定して実行
+cd backend
 go test -v -run TestFunctionName ./internal/models/...
 ```
 
 #### レースコンディション検出
 ```bash
-# データ競合を検出
+cd backend
 go test -race ./...
 ```
 
 #### 並列実行
 ```bash
-# 並列度を指定してテスト実行
+cd backend
 go test -v -parallel 4 ./...
 ```
 
 #### ベンチマークテスト
 ```bash
-# ベンチマークテストを実行
+cd backend
 go test -bench=. -benchmem ./...
 ```
 
