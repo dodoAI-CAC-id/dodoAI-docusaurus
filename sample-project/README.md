@@ -4,14 +4,21 @@ Go言語とPostgreSQLを使用した介護施設向け異常検知・通知・�
 
 ## 技術スタック
 
+### バックエンド
 - **言語**: Go 1.21+
 - **フレームワーク**: Gin (HTTPウェブフレームワーク)
 - **データベース**: PostgreSQL 15
 - **コンテナ**: Docker & Docker Compose
 
+### フロントエンド
+- **言語**: Dart
+- **フレームワーク**: Flutter 3.8+
+- **状態管理**: flutter_bloc
+- **アーキテクチャ**: Clean Architecture
+
 ## 主な機能
 
-### マイクロサービスAPI
+### バックエンドAPI
 - 異常イベント管理（検知、記録、更新）
 - 通知システム（スタッフへの通知、既読管理、エスカレーション）
 - 対応アクション管理（現場対応の記録、進捗管理）
@@ -21,14 +28,21 @@ Go言語とPostgreSQLを使用した介護施設向け異常検知・通知・�
 - 監査ログ（全API操作の自動記録）
 - システム設定管理
 
+### フロントエンド（履歴画面）
+- 異常イベント履歴の一覧表示
+- 検索・フィルタリング機能（日付範囲、対象者、ステータス）
+- ページネーション
+- 動画再生機能
+- QRコード表示機能
+
 ## プロジェクト構成
 
 ```
 sample-project/
-├── cmd/
+├── cmd/                         # バックエンド
 │   └── api/
 │       └── main.go              # エントリーポイント
-├── internal/
+├── internal/                    # バックエンド
 │   ├── database/
 │   │   └── postgres.go          # DB接続管理
 │   ├── handlers/                # HTTPハンドラー
@@ -54,6 +68,20 @@ sample-project/
 │   │   └── audit.go             # 監査ログミドルウェア
 │   └── utils/
 │       └── response.go          # 共通レスポンス処理
+├── frontend/                    # フロントエンド（Flutter）
+│   ├── lib/
+│   │   ├── features/
+│   │   │   └── incident_history/  # 履歴画面機能
+│   │   │       ├── application/   # ユースケース
+│   │   │       ├── domain/        # エンティティ・リポジトリ
+│   │   │       ├── infrastructure/ # データソース・実装
+│   │   │       └── presentation/  # UI・BLoC
+│   │   ├── shared/              # 共通コンポーネント
+│   │   └── main.dart
+│   ├── test/                    # ユニットテスト
+│   ├── widgetbook/              # UIカタログ
+│   ├── pubspec.yaml
+│   └── README.md
 ├── migrations/
 │   └── 001_create_base_tables.sql  # DBスキーマ
 ├── docker/
@@ -67,18 +95,25 @@ sample-project/
 
 ## 前提条件
 
+### バックエンド
 - Docker Desktop インストール済み
 - Docker Compose v2.x インストール済み
 
+### フロントエンド
+- Flutter SDK 3.8+ インストール済み
+- Dart SDK 3.8+ インストール済み
+
 ## セットアップ
 
-### 1. 環境変数の設定
+### バックエンド
+
+#### 1. 環境変数の設定
 
 ```bash
 cp .env.example .env
 ```
 
-### 2. Docker Composeでビルド・起動
+#### 2. Docker Composeでビルド・起動
 
 ```bash
 # イメージのビルド
@@ -91,7 +126,7 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
-### 3. 動作確認
+#### 3. 動作確認
 
 ```bash
 # スタッフ一覧取得
@@ -99,6 +134,42 @@ curl http://localhost:8080/api/v2/staffs
 
 # 異常イベント一覧取得
 curl http://localhost:8080/api/v2/incidents
+```
+
+### フロントエンド
+
+#### 1. 依存パッケージのインストール
+
+```bash
+cd frontend
+flutter pub get
+```
+
+#### 2. 開発サーバーの起動
+
+```bash
+# Web開発
+flutter run -d chrome
+
+# または特定のポートで起動
+flutter run -d chrome --web-port 3000
+```
+
+#### 3. テスト実行
+
+```bash
+# ユニットテスト
+flutter test
+
+# カバレッジ付きテスト
+flutter test --coverage
+```
+
+#### 4. Widgetbookの起動（UIカタログ）
+
+```bash
+cd widgetbook
+flutter run -d chrome
 ```
 
 ## API エンドポイント
