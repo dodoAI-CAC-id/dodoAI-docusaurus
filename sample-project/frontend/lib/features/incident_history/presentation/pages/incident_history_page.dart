@@ -30,10 +30,10 @@ class IncidentHistoryPage extends StatelessWidget {
     final videoRemoteDataSource = VideoRemoteDataSource(dio);
     
     final incidentRepository = IncidentRepositoryImpl(
-      remoteDataSource: incidentRemoteDataSource,
+      incidentRemoteDataSource,
     );
     final videoRepository = VideoRepositoryImpl(
-      remoteDataSource: videoRemoteDataSource,
+      videoRemoteDataSource,
     );
     
     final getIncidentsUseCase = GetIncidentsUseCase(incidentRepository);
