@@ -21,10 +21,16 @@ const test = require('./sidebars/test');
 const projectManagement = require('./sidebars/project-management');
 const design = require('./sidebars/design');
 const develop = require('./sidebars/develop');
+const plan = require('./sidebars/plan');
 
 const sidebars = {
   tutorialSidebar: [
     'index',
+    {
+      type: 'category',
+      label: 'Plan',
+      items: plan,
+    },
     {
       type: 'category',
       label: 'Specification',

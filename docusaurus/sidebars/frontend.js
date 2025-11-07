@@ -21,6 +21,14 @@ module.exports = [
   },
   {
     type: 'category',
+    label: '画面設計',
+    key: 'frontend-screen-design',
+    items: [
+      'frontend/screen-design/history-screen',
+    ],
+  },
+  {
+    type: 'category',
     label: 'Develop',
     key: 'frontend-develop',
     items: [

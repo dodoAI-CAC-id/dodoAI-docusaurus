@@ -4,14 +4,21 @@ Go言語とPostgreSQLを使用した介護施設向け異常検知・通知・�
 
 ## 技術スタック
 
+### バックエンド
 - **言語**: Go 1.21+
 - **フレームワーク**: Gin (HTTPウェブフレームワーク)
 - **データベース**: PostgreSQL 15
 - **コンテナ**: Docker & Docker Compose
 
+### フロントエンド
+- **言語**: Dart
+- **フレームワーク**: Flutter 3.8+
+- **状態管理**: flutter_bloc
+- **アーキテクチャ**: Clean Architecture
+
 ## 主な機能
 
-### マイクロサービスAPI
+### バックエンドAPI
 - 異常イベント管理（検知、記録、更新）
 - 通知システム（スタッフへの通知、既読管理、エスカレーション）
 - 対応アクション管理（現場対応の記録、進捗管理）
@@ -21,67 +28,101 @@ Go言語とPostgreSQLを使用した介護施設向け異常検知・通知・�
 - 監査ログ（全API操作の自動記録）
 - システム設定管理
 
+### フロントエンド（履歴画面）
+- 異常イベント履歴の一覧表示
+- 検索・フィルタリング機能（日付範囲、対象者、ステータス）
+- ページネーション
+- 動画再生機能
+- QRコード表示機能
+
 ## プロジェクト構成
 
 ```
 sample-project/
-├── cmd/
-│   └── api/
-│       └── main.go              # エントリーポイント
-├── internal/
-│   ├── database/
-│   │   └── postgres.go          # DB接続管理
-│   ├── handlers/                # HTTPハンドラー
-│   │   ├── incident_handler.go
-│   │   ├── notification_handler.go
-│   │   ├── action_handler.go
-│   │   ├── person_handler.go
-│   │   ├── staff_handler.go
-│   │   ├── room_handler.go
-│   │   ├── incident_video_handler.go
-│   │   ├── audit_log_handler.go
-│   │   └── configuration_handler.go
-│   ├── models/                  # データモデル
-│   │   ├── incident.go
-│   │   ├── notification.go
-│   │   ├── action.go
-│   │   ├── person.go
-│   │   ├── staff.go
-│   │   ├── room.go
-│   │   ├── incident_video.go
-│   │   └── audit_log.go
-│   ├── middleware/
-│   │   └── audit.go             # 監査ログミドルウェア
-│   └── utils/
-│       └── response.go          # 共通レスポンス処理
-├── migrations/
-│   └── 001_create_base_tables.sql  # DBスキーマ
-├── docker/
-│   ├── Dockerfile
-│   └── init.sql
+├── backend/                     # バックエンド（Go API）
+│   ├── cmd/
+│   │   └── api/
+│   │       └── main.go          # エントリーポイント
+│   ├── internal/
+│   │   ├── database/
+│   │   │   └── postgres.go      # DB接続管理
+│   │   ├── handlers/            # HTTPハンドラー
+│   │   │   ├── incident_handler.go
+│   │   │   ├── notification_handler.go
+│   │   │   ├── action_handler.go
+│   │   │   ├── person_handler.go
+│   │   │   ├── staff_handler.go
+│   │   │   ├── room_handler.go
+│   │   │   ├── incident_video_handler.go
+│   │   │   ├── audit_log_handler.go
+│   │   │   └── configuration_handler.go
+│   │   ├── models/              # データモデル
+│   │   │   ├── incident.go
+│   │   │   ├── notification.go
+│   │   │   ├── action.go
+│   │   │   ├── person.go
+│   │   │   ├── staff.go
+│   │   │   ├── room.go
+│   │   │   ├── incident_video.go
+│   │   │   └── audit_log.go
+│   │   ├── middleware/
+│   │   │   └── audit.go         # 監査ログミドルウェア
+│   │   └── utils/
+│   │       └── response.go      # 共通レスポンス処理
+│   ├── migrations/
+│   │   └── 001_create_base_tables.sql  # DBスキーマ
+│   ├── docker/
+│   │   ├── Dockerfile
+│   │   └── init.sql
+│   ├── test/                    # テスト
+│   ├── go.mod
+│   ├── go.sum
+│   └── .env.example
+├── frontend/                    # フロントエンド（Flutter）
+│   ├── lib/
+│   │   ├── features/
+│   │   │   └── incident_history/  # 履歴画面機能
+│   │   │       ├── application/   # ユースケース
+│   │   │       ├── domain/        # エンティティ・リポジトリ
+│   │   │       ├── infrastructure/ # データソース・実装
+│   │   │       └── presentation/  # UI・BLoC
+│   │   ├── shared/              # 共通コンポーネント
+│   │   └── main.dart
+│   ├── test/                    # ユニットテスト
+│   ├── widgetbook/              # UIカタログ
+│   ├── pubspec.yaml
+│   └── README.md
 ├── docker-compose.yml
-├── go.mod
-├── .env.example
+├── .gitignore
 └── README.md
 ```
 
 ## 前提条件
 
+### バックエンド
 - Docker Desktop インストール済み
 - Docker Compose v2.x インストール済み
 
+### フロントエンド
+- Flutter SDK 3.8+ インストール済み
+- Dart SDK 3.8+ インストール済み
+
 ## セットアップ
 
-### 1. 環境変数の設定
+### バックエンド
+
+#### 1. 環境変数の設定
 
 ```bash
+cd backend
 cp .env.example .env
+cd ..
 ```
 
-### 2. Docker Composeでビルド・起動
+#### 2. Docker Composeでビルド・起動
 
 ```bash
-# イメージのビルド
+# プロジェクトルートから実行
 docker-compose build
 
 # コンテナの起動
@@ -91,7 +132,14 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
-### 3. 動作確認
+#### 3. ローカル開発（Dockerを使わない場合）
+
+```bash
+cd backend
+go run cmd/api/main.go
+```
+
+#### 4. 動作確認
 
 ```bash
 # スタッフ一覧取得
@@ -99,6 +147,42 @@ curl http://localhost:8080/api/v2/staffs
 
 # 異常イベント一覧取得
 curl http://localhost:8080/api/v2/incidents
+```
+
+### フロントエンド
+
+#### 1. 依存パッケージのインストール
+
+```bash
+cd frontend
+flutter pub get
+```
+
+#### 2. 開発サーバーの起動
+
+```bash
+# Web開発
+flutter run -d chrome
+
+# または特定のポートで起動
+flutter run -d chrome --web-port 3000
+```
+
+#### 3. テスト実行
+
+```bash
+# ユニットテスト
+flutter test
+
+# カバレッジ付きテスト
+flutter test --coverage
+```
+
+#### 4. Widgetbookの起動（UIカタログ）
+
+```bash
+cd widgetbook
+flutter run -d chrome
 ```
 
 ## API エンドポイント
@@ -335,7 +419,8 @@ go mod download
 
 #### 全テスト実行
 ```bash
-# すべてのテストを実行
+# backendディレクトリから実行
+cd backend
 go test -v ./...
 ```
 
@@ -343,16 +428,19 @@ go test -v ./...
 
 **モデル層のテストのみ**
 ```bash
+cd backend
 go test -v ./internal/models/...
 ```
 
 **ハンドラー層のテストのみ**
 ```bash
+cd backend
 go test -v ./internal/handlers/...
 ```
 
 **E2Eテストのみ**
 ```bash
+cd backend
 go test -v ./test/e2e/...
 ```
 
@@ -360,7 +448,8 @@ go test -v ./test/e2e/...
 
 #### カバレッジ付きテスト実行
 ```bash
-# カバレッジを測定しながらテスト実行
+# backendディレクトリから実行
+cd backend
 go test -coverprofile=coverage.out ./...
 ```
 
@@ -368,14 +457,14 @@ go test -coverprofile=coverage.out ./...
 
 **HTMLレポート生成**
 ```bash
-# HTMLレポートを生成して表示
+cd backend
 go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out -o coverage.html
 ```
 
 **ターミナルでカバレッジ確認**
 ```bash
-# 関数ごとのカバレッジを表示
+cd backend
 go tool cover -func=coverage.out
 ```
 
@@ -383,25 +472,25 @@ go tool cover -func=coverage.out
 
 #### 特定のテストケースのみ実行
 ```bash
-# テスト名を指定して実行
+cd backend
 go test -v -run TestFunctionName ./internal/models/...
 ```
 
 #### レースコンディション検出
 ```bash
-# データ競合を検出
+cd backend
 go test -race ./...
 ```
 
 #### 並列実行
 ```bash
-# 並列度を指定してテスト実行
+cd backend
 go test -v -parallel 4 ./...
 ```
 
 #### ベンチマークテスト
 ```bash
-# ベンチマークテストを実行
+cd backend
 go test -bench=. -benchmem ./...
 ```
 

@@ -13,7 +13,7 @@ services:
       - "15432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./migrations/001_create_base_tables.sql:/docker-entrypoint-initdb.d/001_create_base_tables.sql
+      - ./backend/migrations/001_create_base_tables.sql:/docker-entrypoint-initdb.d/001_create_base_tables.sql
     networks:
       - app-network
     healthcheck:
@@ -25,7 +25,7 @@ services:
   # Go API Service
   api:
     build:
-      context: .
+      context: ./backend
       dockerfile: docker/Dockerfile
     container_name: sample-project-api
     environment:
