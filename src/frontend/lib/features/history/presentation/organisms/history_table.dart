@@ -205,21 +205,15 @@ class _HistoryTableState extends State<HistoryTable> {
     return Semantics(
       label: 'データテーブル、${widget.incidents.length}件の履歴',
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           // ヘッダー（固定）
           _buildTableHeader(columns),
           
-          // データ行（仮想スクロール）
-          Expanded(
-            child: ListView.builder(
-              itemCount: widget.incidents.length,
-              itemBuilder: (context, index) {
-                return _buildOptimizedDataRow(widget.incidents[index], index);
-              },
-              // キャッシュ範囲を設定してパフォーマンス向上
-              cacheExtent: 500,
-            ),
-          ),
+          // データ行（通常のリスト表示）
+          ...widget.incidents.asMap().entries.map((entry) {
+            return _buildOptimizedDataRow(entry.value, entry.key);
+          }).toList(),
         ],
       ),
     );

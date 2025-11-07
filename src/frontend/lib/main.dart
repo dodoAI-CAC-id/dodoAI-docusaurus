@@ -3,8 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/history/presentation/pages/history_page.dart';
 import 'package:frontend/features/history/presentation/blocs/history/history_bloc.dart';
 import 'package:frontend/features/history/data/repositories/incident_repository_impl.dart';
+import 'package:frontend/features/history/data/repositories/incident_repository_mock.dart';
 import 'package:frontend/core/network/api_client.dart';
 import 'package:frontend/core/config/api_config.dart';
+
+// モックデータ使用フラグ
+// true: モックデータを使用（開発・テスト用）
+// false: 実APIを使用（本番用）
+const bool USE_MOCK_DATA = true;
 
 void main() {
   runApp(const MyApp());
@@ -15,15 +21,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // APIクライアントの初期化
-    final apiClient = ApiClient(
-      baseUrl: ApiConfig.baseUrl,
-    );
-
-    // リポジトリの初期化（DioインスタンスをApiClientから取得）
-    final incidentRepository = IncidentRepositoryImpl(
-      apiClient.dio,
-    );
+    // リポジトリの初期化
+    // USE_MOCK_DATAフラグで切り替え
+    final incidentRepository = USE_MOCK_DATA
+        ? IncidentRepositoryMock()
+        : IncidentRepositoryImpl(
+            ApiClient(baseUrl: ApiConfig.baseUrl).dio,
+          );
 
     return MaterialApp(
       title: '異常検知履歴システム',
