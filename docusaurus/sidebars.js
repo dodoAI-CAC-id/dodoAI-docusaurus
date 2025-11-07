@@ -57,6 +57,11 @@ const sidebars = {
       key: 'main-test',
       items: test,
     },
+    {
+      type: 'category',
+      label: 'Project Management',
+      items: projectManagement,
+    },
   ],
 };
 
