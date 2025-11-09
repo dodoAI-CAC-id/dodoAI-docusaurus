@@ -856,10 +856,10 @@ flutter test integration_test/
 ## 📖 参考ドキュメント
 
 ### 内部ドキュメント
-- [画面設計書](../frontend/screen-design/history-screen.md)
-- [API仕様書](../../static/swagger/v2/microservice.yaml)
-- [Onion Architecture Guide](../../dodoai-agentic-dev-framework-develop/docs/docs/frontend/modular-onion-architecture/)
-- [Atomic Design Guide](../../dodoai-agentic-dev-framework-develop/docs/docs/frontend/modular-onion-architecture/04-atomic-design-implementation-rules.md)
+- [画面設計書](/frontend/design/screen-design)
+- [API仕様書](/swagger/v2/microservice.yaml)
+- [Onion Architecture Guide](/frontend/modular-onion-architecture/introduction-and-purpose)
+- [Atomic Design Guide](/frontend/modular-onion-architecture/atomic-design-implementation-rules)
 
 ### 外部リソース
 - [Flutter公式ドキュメント](https://flutter.dev/docs)
