@@ -33,6 +33,9 @@ type Incident struct {
 	ResponseStartedAt      *time.Time `json:"responseStartedAt,omitempty"`
 	ResponseCompletedAt    *time.Time `json:"responseCompletedAt,omitempty"`
 	
+	// Alert status
+	IsAlertActive   bool           `json:"isAlertActive"`
+	
 	Notifications   []Notification  `json:"notifications,omitempty"`
 	Actions         []Action        `json:"actions,omitempty"`
 	Videos          []IncidentVideo `json:"videos,omitempty"`
@@ -81,7 +84,8 @@ func GetAllIncidents(db *sql.DB, personID, status *string, from, to *time.Time) 
 			first_action.staff_name as assigned_to,
 			first_action.action_type as action_type,
 			first_action.start_at as response_started_at,
-			last_action.end_at as response_completed_at
+			last_action.end_at as response_completed_at,
+			i.alert_active
 		FROM incidents i
 		LEFT JOIN persons p ON i.person_id = p.id
 		LEFT JOIN rooms r ON i.room_id = r.id
@@ -159,6 +163,7 @@ func GetAllIncidents(db *sql.DB, personID, status *string, from, to *time.Time) 
 			&incident.ActionType,
 			&incident.ResponseStartedAt,
 			&incident.ResponseCompletedAt,
+			&incident.IsAlertActive,
 		)
 		if err != nil {
 			return nil, err
@@ -172,10 +177,18 @@ func GetAllIncidents(db *sql.DB, personID, status *string, from, to *time.Time) 
 // GetIncidentByID retrieves a specific incident with related data
 func GetIncidentByID(db *sql.DB, id string) (*Incident, error) {
 	query := `
-		SELECT id, detected_at, type, status, person_id, camera_id, room_id,
-		       detection_area_id, description, created_by, created_at, updated_at
-		FROM incidents
-		WHERE id = $1
+		SELECT 
+			i.id, i.detected_at, i.type, i.status, 
+			i.person_id, i.camera_id, i.room_id,
+			i.detection_area_id, i.description, i.created_by, 
+			i.created_at, i.updated_at,
+			p.name as person_name,
+			r.room_number as room_number,
+			i.alert_active
+		FROM incidents i
+		LEFT JOIN persons p ON i.person_id = p.id
+		LEFT JOIN rooms r ON i.room_id = r.id
+		WHERE i.id = $1
 	`
 
 	var incident Incident
@@ -192,6 +205,9 @@ func GetIncidentByID(db *sql.DB, id string) (*Incident, error) {
 		&incident.CreatedBy,
 		&incident.CreatedAt,
 		&incident.UpdatedAt,
+		&incident.PersonName,
+		&incident.RoomNumber,
+		&incident.IsAlertActive,
 	)
 
 	if err == sql.ErrNoRows {
@@ -380,6 +396,57 @@ func UpdateIncident(db *sql.DB, id string, input IncidentUpdate) (*Incident, err
 		return nil, nil
 	}
 	if err != nil {
+		return nil, err
+	}
+
+	return &incident, nil
+}
+
+// ToggleAlertStatus updates the alert_active status of an incident
+func ToggleAlertStatus(db *sql.DB, id string, isActive bool) (*Incident, error) {
+	query := `
+		UPDATE incidents
+		SET alert_active = $1, updated_at = CURRENT_TIMESTAMP
+		WHERE id = $2
+		RETURNING id, detected_at, type, status, person_id, camera_id, room_id,
+		          detection_area_id, description, created_by, created_at, updated_at, alert_active
+	`
+
+	var incident Incident
+	err := db.QueryRow(query, isActive, id).Scan(
+		&incident.ID,
+		&incident.DetectedAt,
+		&incident.Type,
+		&incident.Status,
+		&incident.PersonID,
+		&incident.CameraID,
+		&incident.RoomID,
+		&incident.DetectionAreaID,
+		&incident.Description,
+		&incident.CreatedBy,
+		&incident.CreatedAt,
+		&incident.UpdatedAt,
+		&incident.IsAlertActive,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	// Fetch display fields via JOIN
+	displayQuery := `
+		SELECT p.name as person_name, r.room_number as room_number
+		FROM incidents i
+		LEFT JOIN persons p ON i.person_id = p.id
+		LEFT JOIN rooms r ON i.room_id = r.id
+		WHERE i.id = $1
+	`
+	
+	err = db.QueryRow(displayQuery, id).Scan(&incident.PersonName, &incident.RoomNumber)
+	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
 

@@ -80,21 +80,30 @@ class ViewScreenBloc extends Bloc<ViewScreenEvent, ViewScreenState> {
 
     final result = await updateIncidentStatusUseCase(params);
 
-    result.fold(
-      (failure) {
+    await result.fold<Future<void>>(
+      (failure) async {
         // エラー時は元の状態に戻す
         emit(ViewScreenLoaded(items: currentState.items));
         emit(ViewScreenError(message: failure.message));
         // エラー表示後、再度読み込み状態に戻す
         emit(ViewScreenLoaded(items: currentState.items));
       },
-      (updatedItem) {
-        // 更新されたアイテムでリストを更新
-        final updatedItems = currentState.items.map((item) {
-          return item.id == updatedItem.id ? updatedItem : item;
-        }).toList();
-
-        emit(ViewScreenLoaded(items: updatedItems));
+      (updatedItem) async {
+        // 更新成功後、一覧を再フェッチして最新状態を反映
+        final refreshResult = await getIncidentItemsUseCase();
+        
+        await refreshResult.fold<Future<void>>(
+          (failure) async {
+            // 再フェッチ失敗時は元の状態に戻す
+            emit(ViewScreenLoaded(items: currentState.items));
+            emit(ViewScreenError(message: failure.message));
+            emit(ViewScreenLoaded(items: currentState.items));
+          },
+          (freshItems) async {
+            // 最新の一覧で状態を更新
+            emit(ViewScreenLoaded(items: freshItems));
+          },
+        );
       },
     );
   }
@@ -118,20 +127,29 @@ class ViewScreenBloc extends Bloc<ViewScreenEvent, ViewScreenState> {
       isActive: event.isActive,
     );
 
-    result.fold(
-      (failure) {
+    await result.fold<Future<void>>(
+      (failure) async {
         // エラー時は元の状態に戻す
         emit(ViewScreenLoaded(items: currentState.items));
         emit(ViewScreenError(message: failure.message));
         emit(ViewScreenLoaded(items: currentState.items));
       },
-      (updatedItem) {
-        // 更新されたアイテムでリストを更新
-        final updatedItems = currentState.items.map((item) {
-          return item.id == updatedItem.id ? updatedItem : item;
-        }).toList();
-
-        emit(ViewScreenLoaded(items: updatedItems));
+      (updatedItem) async {
+        // 更新成功後、一覧を再フェッチして最新状態を反映
+        final refreshResult = await getIncidentItemsUseCase();
+        
+        await refreshResult.fold<Future<void>>(
+          (failure) async {
+            // 再フェッチ失敗時は元の状態に戻す
+            emit(ViewScreenLoaded(items: currentState.items));
+            emit(ViewScreenError(message: failure.message));
+            emit(ViewScreenLoaded(items: currentState.items));
+          },
+          (freshItems) async {
+            // 最新の一覧で状態を更新
+            emit(ViewScreenLoaded(items: freshItems));
+          },
+        );
       },
     );
   }

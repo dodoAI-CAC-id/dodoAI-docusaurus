@@ -278,8 +278,17 @@ class _IncidentItemCardState extends State<IncidentItemCard> {
       case IncidentStatus.inProgress:
         return _buildInProgressButtons();
       case IncidentStatus.noDetection:
-        return const SizedBox.shrink(); // ボタンなし
+        return _buildNoDetectionButtons();
     }
+  }
+
+  Widget _buildNoDetectionButtons() {
+    return _buildActionButton(
+      widget.item.isAlertActive ? 'アラート稼働中' : 'アラート停止中',
+      widget.item.isAlertActive ? Colors.blue.shade700 : Colors.grey.shade600,
+      () => widget.onActionButtonPressed?.call('toggle_alert'),
+      fullWidth: true,
+    );
   }
 
   Widget _buildUnhandledButtons() {
@@ -316,22 +325,46 @@ class _IncidentItemCardState extends State<IncidentItemCard> {
   }
 
   Widget _buildInProgressButtons() {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: _buildActionButton(
-            '戻す',
-            Colors.grey.shade700,
-            () => widget.onActionButtonPressed?.call('revert'),
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: _buildActionButton(
+                '対応不要',
+                Colors.black87,
+                () => widget.onActionButtonPressed?.call('no_visit_needed'),
+              ),
+            ),
+            const SizedBox(width: 4),
+            Expanded(
+              child: _buildActionButton(
+                '誤検知',
+                Colors.red.shade700,
+                () => widget.onActionButtonPressed?.call('false_detection'),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 4),
-        Expanded(
-          child: _buildActionButton(
-            '完了',
-            Colors.green.shade700,
-            () => widget.onActionButtonPressed?.call('complete'),
-          ),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            Expanded(
+              child: _buildActionButton(
+                '戻す',
+                Colors.grey.shade700,
+                () => widget.onActionButtonPressed?.call('revert'),
+              ),
+            ),
+            const SizedBox(width: 4),
+            Expanded(
+              child: _buildActionButton(
+                '完了',
+                Colors.green.shade700,
+                () => widget.onActionButtonPressed?.call('complete'),
+              ),
+            ),
+          ],
         ),
       ],
     );

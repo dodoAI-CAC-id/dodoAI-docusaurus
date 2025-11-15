@@ -146,3 +146,39 @@ func (h *IncidentHandler) UpdateIncident(c *gin.Context) {
 
 	utils.SuccessResponse(c, http.StatusOK, incident)
 }
+
+// ToggleAlertStatus handles PATCH /api/v2/incidents/:id/alert
+func (h *IncidentHandler) ToggleAlertStatus(c *gin.Context) {
+	incidentID := c.Param("id")
+
+	var input struct {
+		IsActive *bool `json:"isActive"`
+	}
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		utils.ErrorResponse(c, http.StatusBadRequest, "Invalid request body: "+err.Error())
+		return
+	}
+
+	// Validate required field
+	if input.IsActive == nil {
+		utils.ErrorResponse(c, http.StatusBadRequest, "isActive field is required")
+		return
+	}
+
+	incident, err := models.ToggleAlertStatus(h.db, incidentID, *input.IsActive)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			utils.ErrorResponse(c, http.StatusNotFound, "Incident not found")
+			return
+		}
+		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to toggle alert status: "+err.Error())
+		return
+	}
+	if incident == nil {
+		utils.ErrorResponse(c, http.StatusNotFound, "Incident not found")
+		return
+	}
+
+	utils.SuccessResponse(c, http.StatusOK, incident)
+}
