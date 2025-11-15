@@ -17,6 +17,7 @@ import 'package:mamoai/features/incident_history/presentation/widgets/molecules/
 import 'package:mamoai/features/incident_history/presentation/widgets/molecules/qr_code_dialog.dart';
 import 'package:mamoai/shared/presentation/components/atoms/app_text.dart';
 import 'package:mamoai/shared/presentation/components/organisms/app_header.dart';
+import 'package:mamoai/features/view_screen/presentation/pages/view_screen_page_wrapper.dart';
 
 /// 履歴画面
 class IncidentHistoryPage extends StatelessWidget {
@@ -81,9 +82,12 @@ class _IncidentHistoryViewState extends State<IncidentHistoryView> {
               QrCodeDialog.show(context);
             },
             onViewPressed: () {
-              // TODO: ビュー画面へ遷移
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('ビュー画面への遷移（未実装）')),
+              // ビュー画面へ遷移
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ViewScreenPageWrapper(),
+                ),
               );
             },
             onReloadPressed: () {

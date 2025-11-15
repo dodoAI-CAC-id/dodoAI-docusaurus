@@ -24,6 +24,7 @@ module.exports = [
     label: '画面設計',
     key: 'frontend-screen-design',
     items: [
+      'frontend/screen-design/view-screen',
       'frontend/screen-design/history-screen',
     ],
   },
