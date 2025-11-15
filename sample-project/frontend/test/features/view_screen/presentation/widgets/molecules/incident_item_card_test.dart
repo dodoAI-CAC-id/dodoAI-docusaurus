@@ -89,7 +89,7 @@ void main() {
       expect(find.text('103-A'), findsOneWidget);
       expect(find.text('鈴木 一郎'), findsOneWidget);
       expect(find.text('臥床'), findsNWidgets(2)); // 検知タイプとプレースホルダーの2箇所
-      expect(find.text('アラート稼働中'), findsOneWidget); // isAlertActive=trueなので稼働中
+      expect(find.text('アラート稼働中'), findsNWidgets(2)); // StatusBadgeとボタンの2箇所
     });
 
     testWidgets('異常検知中の場合、対応ボタンが表示される', (WidgetTester tester) async {
@@ -124,7 +124,7 @@ void main() {
       expect(find.byType(ElevatedButton), findsNWidgets(3));
     });
 
-    testWidgets('検知なしの場合、アラート稼働中バッジが表示され、ボタンは表示されない', (WidgetTester tester) async {
+    testWidgets('検知なしの場合、アラート稼働中バッジとボタンが表示される', (WidgetTester tester) async {
       // Arrange
       const item = IncidentItem(
         id: '3',
@@ -149,11 +149,11 @@ void main() {
       );
 
       // Assert
-      expect(find.text('アラート稼働中'), findsOneWidget); // バッジに表示
-      expect(find.byType(ElevatedButton), findsNothing); // ボタンなし
+      expect(find.text('アラート稼働中'), findsNWidgets(2)); // StatusBadgeとボタンの2箇所
+      expect(find.byType(ElevatedButton), findsOneWidget); // アラート切替ボタン
     });
 
-    testWidgets('検知なしでアラート停止中の場合、アラート停止中バッジが表示される', (WidgetTester tester) async {
+    testWidgets('検知なしでアラート停止中の場合、アラート停止中バッジとボタンが表示される', (WidgetTester tester) async {
       // Arrange
       const item = IncidentItem(
         id: '4',
@@ -178,8 +178,8 @@ void main() {
       );
 
       // Assert
-      expect(find.text('アラート停止中'), findsOneWidget); // バッジに表示
-      expect(find.byType(ElevatedButton), findsNothing); // ボタンなし
+      expect(find.text('アラート停止中'), findsNWidgets(2)); // StatusBadgeとボタンの2箇所
+      expect(find.byType(ElevatedButton), findsOneWidget); // アラート切替ボタン
     });
 
     testWidgets('カードタップ時にコールバックが呼ばれる', (WidgetTester tester) async {

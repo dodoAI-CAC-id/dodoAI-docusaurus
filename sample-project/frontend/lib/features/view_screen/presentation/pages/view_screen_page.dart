@@ -112,7 +112,7 @@ class _ViewScreenPageState extends State<ViewScreenPage> {
                     // 異常検知中セクション
                     if (detectedItems.isNotEmpty) ...[
                       _buildSectionHeader(
-                        '異常検知中一覧',
+                        '異常検知一覧',
                         detectedItems.length,
                         Colors.red,
                       ),
@@ -134,7 +134,7 @@ class _ViewScreenPageState extends State<ViewScreenPage> {
                       _buildGridView(
                         context,
                         noDetectionItems,
-                        null,
+                        (item) => item, // アラート切替ボタンを表示
                       ),
                     ],
 
@@ -295,17 +295,17 @@ class _ViewScreenPageState extends State<ViewScreenPage> {
   void _handleStartResponse(BuildContext context, item) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('対応開始'),
         content: Text('${item.roomBedNumber} の対応を開始しますか？'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: const Text('キャンセル'),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(dialogContext).pop();
               context.read<ViewScreenBloc>().add(
                     UpdateIncidentStatus(
                       incidentId: item.id,
@@ -330,17 +330,17 @@ class _ViewScreenPageState extends State<ViewScreenPage> {
   void _handleNoVisitNeeded(BuildContext context, item) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('訪室不要'),
         content: Text('${item.roomBedNumber} は訪室不要として処理しますか？'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: const Text('キャンセル'),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(dialogContext).pop();
               context.read<ViewScreenBloc>().add(
                     UpdateIncidentStatus(
                       incidentId: item.id,
@@ -364,17 +364,17 @@ class _ViewScreenPageState extends State<ViewScreenPage> {
   void _handleFalseDetection(BuildContext context, item) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('誤検知'),
         content: Text('${item.roomBedNumber} を誤検知として処理しますか？'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: const Text('キャンセル'),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(dialogContext).pop();
               context.read<ViewScreenBloc>().add(
                     UpdateIncidentStatus(
                       incidentId: item.id,
@@ -401,17 +401,17 @@ class _ViewScreenPageState extends State<ViewScreenPage> {
   void _handleRevert(BuildContext context, item) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('対応を戻す'),
         content: Text('${item.roomBedNumber} の対応を未対応に戻しますか？'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: const Text('キャンセル'),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(dialogContext).pop();
               context.read<ViewScreenBloc>().add(
                     UpdateIncidentStatus(
                       incidentId: item.id,
@@ -435,17 +435,17 @@ class _ViewScreenPageState extends State<ViewScreenPage> {
   void _handleComplete(BuildContext context, item) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('対応完了'),
         content: Text('${item.roomBedNumber} の対応を完了しますか？'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: const Text('キャンセル'),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(dialogContext).pop();
               context.read<ViewScreenBloc>().add(
                     UpdateIncidentStatus(
                       incidentId: item.id,
@@ -471,9 +471,18 @@ class _ViewScreenPageState extends State<ViewScreenPage> {
   }
 
   void _handleToggleAlert(BuildContext context, item) {
+    final newAlertStatus = !item.isAlertActive;
+    context.read<ViewScreenBloc>().add(
+          ToggleAlertStatus(
+            incidentId: item.id,
+            isActive: newAlertStatus,
+          ),
+        );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${item.roomBedNumber} のアラート設定を切り替えました'),
+        content: Text(
+          '${item.roomBedNumber} のアラートを${newAlertStatus ? "稼働" : "停止"}しました',
+        ),
       ),
     );
   }

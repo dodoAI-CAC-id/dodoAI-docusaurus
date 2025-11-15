@@ -42,4 +42,31 @@ enum IncidentStatus {
     return this == IncidentStatus.unhandled ||
         this == IncidentStatus.inProgress;
   }
+
+  /// APIステータス値に変換
+  String toApiStatus() {
+    switch (this) {
+      case IncidentStatus.unhandled:
+        return 'open';
+      case IncidentStatus.inProgress:
+        return 'monitoring';
+      case IncidentStatus.noDetection:
+        return 'resolved';
+    }
+  }
+
+  /// APIステータス値からIncidentStatusを取得
+  static IncidentStatus fromApiStatus(String apiStatus) {
+    switch (apiStatus.toLowerCase()) {
+      case 'open':
+        return IncidentStatus.unhandled;
+      case 'monitoring':
+        return IncidentStatus.inProgress;
+      case 'resolved':
+        return IncidentStatus.noDetection;
+      default:
+        // デフォルトは検知なしとして扱う
+        return IncidentStatus.noDetection;
+    }
+  }
 }
