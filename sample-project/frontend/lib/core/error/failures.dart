@@ -44,3 +44,8 @@ class AuthorizationFailure extends Failure {
 class UnknownFailure extends Failure {
   const UnknownFailure(super.message);
 }
+
+/// Not Foundエラー
+class NotFoundFailure extends Failure {
+  const NotFoundFailure(super.message);
+}
