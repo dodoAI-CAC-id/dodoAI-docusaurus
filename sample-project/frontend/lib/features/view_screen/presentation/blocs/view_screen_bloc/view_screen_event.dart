@@ -48,3 +48,17 @@ class ToggleAlertStatus extends ViewScreenEvent {
   @override
   List<Object?> get props => [incidentId, isActive];
 }
+
+/// 異常検知をシミュレーションするイベント（開発用）
+class SimulateIncidentDetected extends ViewScreenEvent {
+  final String incidentId;
+  final String cameraId;
+
+  const SimulateIncidentDetected({
+    required this.incidentId,
+    required this.cameraId,
+  });
+
+  @override
+  List<Object?> get props => [incidentId, cameraId];
+}

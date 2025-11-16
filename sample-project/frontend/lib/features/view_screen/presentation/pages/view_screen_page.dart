@@ -96,6 +96,9 @@ class _ViewScreenPageState extends State<ViewScreenPage> {
             final noDetectionItems = state is ViewScreenLoaded
                 ? state.noDetectionItems
                 : items.where((item) => !item.isDetected).toList();
+            final highlightedItemId = state is ViewScreenLoaded
+                ? state.highlightedItemId
+                : null;
 
             return RefreshIndicator(
               onRefresh: () async {
@@ -119,6 +122,7 @@ class _ViewScreenPageState extends State<ViewScreenPage> {
                       _buildGridView(
                         context,
                         detectedItems,
+                        highlightedItemId,
                         (item) => item, // アクションボタンは各カード内で処理
                       ),
                       const SizedBox(height: 16),
@@ -134,6 +138,7 @@ class _ViewScreenPageState extends State<ViewScreenPage> {
                       _buildGridView(
                         context,
                         noDetectionItems,
+                        highlightedItemId,
                         (item) => item, // アラート切替ボタンを表示
                       ),
                     ],
@@ -233,6 +238,7 @@ class _ViewScreenPageState extends State<ViewScreenPage> {
   Widget _buildGridView(
     BuildContext context,
     List items,
+    String? highlightedItemId,
     Function(dynamic)? onActionButtonPressed,
   ) {
     // レスポンシブ対応：画面幅に応じてカラム数を調整（最大5列）
@@ -258,6 +264,7 @@ class _ViewScreenPageState extends State<ViewScreenPage> {
             final item = items[index];
             return IncidentItemCard(
               item: item,
+              isHighlighted: highlightedItemId == item.id,
               onTap: () => _showIncidentDetail(context, item),
               onActionButtonPressed: onActionButtonPressed != null
                   ? (actionType) => _handleAction(context, item, actionType)

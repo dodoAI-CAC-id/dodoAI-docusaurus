@@ -22,8 +22,12 @@ class ViewScreenLoading extends ViewScreenState {
 /// データ読み込み成功
 class ViewScreenLoaded extends ViewScreenState {
   final List<IncidentItem> items;
+  final String? highlightedItemId;
 
-  const ViewScreenLoaded({required this.items});
+  const ViewScreenLoaded({
+    required this.items,
+    this.highlightedItemId,
+  });
 
   /// 異常検知中のアイテム（未対応 + 対応中）
   List<IncidentItem> get detectedItems {
@@ -48,7 +52,7 @@ class ViewScreenLoaded extends ViewScreenState {
   }
 
   @override
-  List<Object?> get props => [items];
+  List<Object?> get props => [items, highlightedItemId];
 }
 
 /// エラー状態

@@ -109,8 +109,15 @@ class ViewScreenRepository implements IViewScreenRepository {
     // 異常姿勢（検知タイプ）の取得
     String detectionType = data['type'] as String? ?? '臥床';
 
+    // カメラIDの取得（必須）
+    // APIは camera_id または cameraId のいずれかで返す可能性があるため両方チェック
+    String cameraId = (data['cameraId'] as String?) ?? 
+                      (data['camera_id'] as String?) ?? 
+                      'unknown-camera';
+
     return IncidentItem(
       id: data['id'] as String,
+      cameraId: cameraId,
       roomBedNumber: roomBedNumber,
       personName: personName,
       detectionType: detectionType,
@@ -118,7 +125,6 @@ class ViewScreenRepository implements IViewScreenRepository {
       pictureAtDetection: pictureAtDetection,
       pictureBeforeDetection: pictureBeforeDetection,
       detectedAt: detectedAt,
-      cameraId: data['cameraId'] as String?,
       isAlertActive: data['isAlertActive'] as bool? ?? true, // APIから取得、デフォルトは稼働中
     );
   }

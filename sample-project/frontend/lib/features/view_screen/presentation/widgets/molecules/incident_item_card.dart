@@ -1,6 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/entities/incident_item.dart';
 import '../../../domain/entities/incident_status.dart';
+import '../../blocs/view_screen_bloc/view_screen_bloc.dart';
+import '../../blocs/view_screen_bloc/view_screen_event.dart';
 import '../atoms/status_badge.dart';
 
 /// インシデントアイテムカード（Molecule）
@@ -9,12 +13,14 @@ class IncidentItemCard extends StatefulWidget {
   final IncidentItem item;
   final VoidCallback? onTap;
   final Function(String actionType)? onActionButtonPressed;
+  final bool isHighlighted;
 
   const IncidentItemCard({
     super.key,
     required this.item,
     this.onTap,
     this.onActionButtonPressed,
+    this.isHighlighted = false,
   });
 
   @override
@@ -26,21 +32,23 @@ class _IncidentItemCardState extends State<IncidentItemCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      elevation: 3,
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: _getBorderColor(),
-          width: 1,
-        ),
-      ),
-      child: InkWell(
-        onTap: widget.onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Column(
+    return Stack(
+      children: [
+        Card(
+          margin: EdgeInsets.zero,
+          elevation: 3,
+          color: widget.isHighlighted ? Colors.yellow.shade100 : Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: _getBorderColor(),
+              width: 1,
+            ),
+          ),
+          child: InkWell(
+            onTap: widget.onTap,
+            borderRadius: BorderRadius.circular(12),
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ヘッダー（部屋番号 + 見守り対象者名 + 患者ID + ステータスバッジ）
@@ -144,14 +152,48 @@ class _IncidentItemCardState extends State<IncidentItemCard> {
               ),
             ),
 
-            // アクションボタン
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: _buildActionButtons(),
-            ),
-          ],
+              // アクションボタン
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: _buildActionButtons(),
+              ),
+            ],
+          ),
         ),
       ),
+      // 開発用シミュレーションボタン（kDebugMode時、かつ検知なしのカードのみ表示）
+      if (kDebugMode && widget.item.status == IncidentStatus.noDetection)
+        Positioned(
+          top: 4,
+          right: 4,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                context.read<ViewScreenBloc>().add(
+                      SimulateIncidentDetected(
+                        incidentId: widget.item.id,
+                        cameraId: widget.item.cameraId,
+                      ),
+                    );
+              },
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade700.withValues(alpha: 0.9),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Icon(
+                  Icons.videocam_outlined,
+                  size: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

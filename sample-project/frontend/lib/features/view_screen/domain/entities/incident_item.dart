@@ -5,6 +5,7 @@ import 'incident_status.dart';
 class IncidentItem extends Equatable {
   const IncidentItem({
     required this.id,
+    required this.cameraId,
     required this.roomBedNumber,
     required this.personName,
     required this.detectionType,
@@ -12,7 +13,6 @@ class IncidentItem extends Equatable {
     this.pictureAtDetection,
     this.pictureBeforeDetection,
     this.detectedAt,
-    this.cameraId,
     this.isAlertActive = true,
   });
 
@@ -40,8 +40,8 @@ class IncidentItem extends Equatable {
   /// 検知日時
   final DateTime? detectedAt;
 
-  /// カメラID
-  final String? cameraId;
+  /// カメラID（必須）
+  final String cameraId;
 
   /// アラート稼働状態（true: 稼働中, false: 停止中）
   final bool isAlertActive;
@@ -59,6 +59,7 @@ class IncidentItem extends Equatable {
   /// コピーメソッド
   IncidentItem copyWith({
     String? id,
+    String? cameraId,
     String? roomBedNumber,
     String? personName,
     String? detectionType,
@@ -66,11 +67,11 @@ class IncidentItem extends Equatable {
     String? pictureAtDetection,
     String? pictureBeforeDetection,
     DateTime? detectedAt,
-    String? cameraId,
     bool? isAlertActive,
   }) {
     return IncidentItem(
       id: id ?? this.id,
+      cameraId: cameraId ?? this.cameraId,
       roomBedNumber: roomBedNumber ?? this.roomBedNumber,
       personName: personName ?? this.personName,
       detectionType: detectionType ?? this.detectionType,
@@ -79,7 +80,6 @@ class IncidentItem extends Equatable {
       pictureBeforeDetection:
           pictureBeforeDetection ?? this.pictureBeforeDetection,
       detectedAt: detectedAt ?? this.detectedAt,
-      cameraId: cameraId ?? this.cameraId,
       isAlertActive: isAlertActive ?? this.isAlertActive,
     );
   }
