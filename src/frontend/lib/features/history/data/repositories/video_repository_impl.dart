@@ -16,12 +16,10 @@ class VideoRepositoryImpl implements IVideoRepository {
   @override
   Future<Video> fetchVideoById(String id) async {
     try {
-      final response = await _dio.get('/api/videos/$id');
-      
-      final data = response.data['data'] as Map<String, dynamic>;
-      final videoDto = VideoDTO.fromJson(data);
-      
-      return videoDto.toEntity();
+      // API仕様書: GET /videos/{videoId}/file
+      // ただし、メタデータ取得用には別のエンドポイントが必要
+      // 現状はincidentから取得する想定
+      throw UnimplementedError('Use fetchVideoByIncidentId instead');
     } on DioException catch (e) {
       throw _handleDioException(e);
     } catch (e) {
@@ -35,11 +33,18 @@ class VideoRepositoryImpl implements IVideoRepository {
   @override
   Future<Video?> fetchVideoByIncidentId(String incidentId) async {
     try {
-      final response = await _dio.get('/api/incidents/$incidentId/video');
+      // API仕様書: GET /incidents/{incidentId}/videos
+      final response = await _dio.get('/api/v2/incidents/$incidentId/videos');
       
-      final data = response.data['data'] as Map<String, dynamic>;
-      final videoDto = VideoDTO.fromJson(data);
+      // BackEndのレスポンス形式: {"success": true, "data": [...]}
+      final responseData = response.data as Map<String, dynamic>;
+      final dataList = responseData['data'] as List<dynamic>;
+      if (dataList.isEmpty) {
+        return null;
+      }
       
+      // 最初の動画を返す
+      final videoDto = VideoDTO.fromJson(dataList.first as Map<String, dynamic>);
       return videoDto.toEntity();
     } on DioException catch (e) {
       // 404の場合はnullを返す
@@ -62,8 +67,9 @@ class VideoRepositoryImpl implements IVideoRepository {
     void Function(double)? onProgress,
   }) async {
     try {
+      // API仕様書: GET /videos/{videoId}/file
       await _dio.download(
-        '/api/videos/$videoId/download',
+        '/api/v2/videos/$videoId/file',
         savePath,
         onReceiveProgress: (received, total) {
           if (onProgress != null && total > 0) {
@@ -86,10 +92,9 @@ class VideoRepositoryImpl implements IVideoRepository {
   @override
   Future<String> getStreamingUrl(String videoId) async {
     try {
-      final response = await _dio.get('/api/videos/$videoId/streaming-url');
-      
-      final data = response.data['data'] as Map<String, dynamic>;
-      return data['streaming_url'] as String;
+      // API仕様書: GET /videos/{videoId}/file
+      // ストリーミングURLとして使用
+      return '/api/v2/videos/$videoId/file';
     } on DioException catch (e) {
       throw _handleDioException(e);
     } catch (e) {
@@ -103,7 +108,14 @@ class VideoRepositoryImpl implements IVideoRepository {
   @override
   Future<bool> videoExists(String videoId) async {
     try {
-      await _dio.head('/api/videos/$videoId');
+      // API仕様書にHEADメソッドの定義がないため、GETを試みる
+      await _dio.get(
+        '/api/v2/videos/$videoId/file',
+        options: Options(
+          receiveDataWhenStatusError: false,
+          validateStatus: (status) => status == 200,
+        ),
+      );
       return true;
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {

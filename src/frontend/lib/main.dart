@@ -10,7 +10,7 @@ import 'package:frontend/core/config/api_config.dart';
 // モックデータ使用フラグ
 // true: モックデータを使用（開発・テスト用）
 // false: 実APIを使用（本番用）
-const bool USE_MOCK_DATA = true;
+const bool USE_MOCK_DATA = false;
 
 void main() {
   runApp(const MyApp());

@@ -1,7 +1,7 @@
 /// API configuration
 class ApiConfig {
   // Base URLs
-  static const String _devBaseUrl = 'http://localhost:3000';
+  static const String _devBaseUrl = 'http://localhost:8080';
   static const String _stagingBaseUrl = 'https://staging-api.mamoai.com';
   static const String _prodBaseUrl = 'https://api.mamoai.com';
 
@@ -18,7 +18,7 @@ class ApiConfig {
   }
 
   // API Endpoints
-  static String get apiVersion => '/api/v1';
+  static String get apiVersion => '/api/v2';
 
   // Incidents
   static String incidentsPath(String incidentId) =>

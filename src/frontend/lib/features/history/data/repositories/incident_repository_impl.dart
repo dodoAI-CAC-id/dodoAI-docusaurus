@@ -22,16 +22,18 @@ class IncidentRepositoryImpl implements IIncidentRepository {
   }) async {
     try {
       final response = await _dio.get(
-        '/api/incidents',
-        queryParameters: {
-          'limit': limit,
-          'offset': offset,
-          'order_by': orderBy,
-          'descending': descending,
-        },
+        '/api/v2/incidents',
       );
       
-      final dataList = response.data['data'] as List<dynamic>;
+      // BackEndのレスポンス形式: {"success": true, "data": [...]}
+      final responseData = response.data as Map<String, dynamic>;
+      final dataList = responseData['data'] as List<dynamic>?;
+      
+      // データが存在しない場合は空のリストを返す
+      if (dataList == null) {
+        return [];
+      }
+      
       final incidents = dataList
           .map((json) => IncidentDTO.fromJson(json as Map<String, dynamic>))
           .map((dto) => dto.toEntity())
@@ -51,9 +53,11 @@ class IncidentRepositoryImpl implements IIncidentRepository {
   @override
   Future<Incident> fetchIncidentById(String id) async {
     try {
-      final response = await _dio.get('/api/incidents/$id');
+      final response = await _dio.get('/api/v2/incidents/$id');
       
-      final data = response.data['data'] as Map<String, dynamic>;
+      // BackEndのレスポンス形式: {"success": true, "data": {...}}
+      final responseData = response.data as Map<String, dynamic>;
+      final data = responseData['data'] as Map<String, dynamic>;
       final incidentDto = IncidentDTO.fromJson(data);
       
       return incidentDto.toEntity();
@@ -81,28 +85,29 @@ class IncidentRepositoryImpl implements IIncidentRepository {
     int offset = 0,
   }) async {
     try {
-      final queryParams = <String, dynamic>{
-        'limit': limit,
-        'offset': offset,
-      };
+      // API仕様書に従い、GETクエリパラメータで検索
+      final queryParams = <String, dynamic>{};
+      
+      if (startDate != null) queryParams['from'] = startDate.toIso8601String();
+      if (endDate != null) queryParams['to'] = endDate.toIso8601String();
+      if (status != null) queryParams['status'] = _statusToString(status);
+      // personId でフィルタするため、residentName は現在未対応
+      // その他のフィルタ条件も現在のAPI仕様書には含まれていない
 
-      final searchData = <String, dynamic>{};
-      if (startDate != null) searchData['start_date'] = startDate.toIso8601String();
-      if (endDate != null) searchData['end_date'] = endDate.toIso8601String();
-      if (roomNumber != null) searchData['room_number'] = roomNumber;
-      if (bedNumber != null) searchData['bed_number'] = bedNumber;
-      if (residentName != null) searchData['resident_name'] = residentName;
-      if (performedBy != null) searchData['performed_by'] = performedBy;
-      if (detectionType != null) searchData['detection_type'] = detectionType;
-      if (status != null) searchData['status'] = _statusToString(status);
-
-      final response = await _dio.post(
-        '/api/incidents/search',
+      final response = await _dio.get(
+        '/api/v2/incidents',
         queryParameters: queryParams,
-        data: searchData,
       );
       
-      final dataList = response.data['data'] as List<dynamic>;
+      // BackEndのレスポンス形式: {"success": true, "data": [...]}
+      final responseData = response.data as Map<String, dynamic>;
+      final dataList = responseData['data'] as List<dynamic>?;
+      
+      // データが存在しない場合は空のリストを返す
+      if (dataList == null) {
+        return [];
+      }
+      
       final incidents = dataList
           .map((json) => IncidentDTO.fromJson(json as Map<String, dynamic>))
           .map((dto) => dto.toEntity())
@@ -122,10 +127,12 @@ class IncidentRepositoryImpl implements IIncidentRepository {
   @override
   Future<int> countIncidents() async {
     try {
-      final response = await _dio.get('/api/incidents/count');
-      
-      final data = response.data['data'] as Map<String, dynamic>;
-      return data['count'] as int;
+      // API仕様書にcountエンドポイントがないため、
+      // 全件取得してカウントする（実際の運用ではAPI追加が必要）
+      final response = await _dio.get('/api/v2/incidents');
+      final responseData = response.data as Map<String, dynamic>;
+      final dataList = responseData['data'] as List<dynamic>?;
+      return dataList?.length ?? 0;
     } on DioException catch (e) {
       throw _handleDioException(e);
     } catch (e) {
@@ -148,23 +155,22 @@ class IncidentRepositoryImpl implements IIncidentRepository {
     IncidentStatus? status,
   }) async {
     try {
-      final searchData = <String, dynamic>{};
-      if (startDate != null) searchData['start_date'] = startDate.toIso8601String();
-      if (endDate != null) searchData['end_date'] = endDate.toIso8601String();
-      if (roomNumber != null) searchData['room_number'] = roomNumber;
-      if (bedNumber != null) searchData['bed_number'] = bedNumber;
-      if (residentName != null) searchData['resident_name'] = residentName;
-      if (performedBy != null) searchData['performed_by'] = performedBy;
-      if (detectionType != null) searchData['detection_type'] = detectionType;
-      if (status != null) searchData['status'] = _statusToString(status);
+      // API仕様書にcountエンドポイントがないため、
+      // 検索結果を取得してカウントする（実際の運用ではAPI追加が必要）
+      final queryParams = <String, dynamic>{};
+      
+      if (startDate != null) queryParams['from'] = startDate.toIso8601String();
+      if (endDate != null) queryParams['to'] = endDate.toIso8601String();
+      if (status != null) queryParams['status'] = _statusToString(status);
 
-      final response = await _dio.post(
-        '/api/incidents/search/count',
-        data: searchData,
+      final response = await _dio.get(
+        '/api/v2/incidents',
+        queryParameters: queryParams,
       );
       
-      final data = response.data['data'] as Map<String, dynamic>;
-      return data['count'] as int;
+      final responseData = response.data as Map<String, dynamic>;
+      final dataList = responseData['data'] as List<dynamic>?;
+      return dataList?.length ?? 0;
     } on DioException catch (e) {
       throw _handleDioException(e);
     } catch (e) {
@@ -175,15 +181,15 @@ class IncidentRepositoryImpl implements IIncidentRepository {
     }
   }
 
-  /// IncidentStatusを文字列に変換
+  /// IncidentStatusを文字列に変換（API仕様書の値に合わせる）
   String _statusToString(IncidentStatus status) {
     switch (status) {
       case IncidentStatus.detected:
-        return 'detected';
+        return 'open';
       case IncidentStatus.confirmed:
-        return 'confirmed';
+        return 'open';
       case IncidentStatus.inProgress:
-        return 'in_progress';
+        return 'monitoring';
       case IncidentStatus.resolved:
         return 'resolved';
     }

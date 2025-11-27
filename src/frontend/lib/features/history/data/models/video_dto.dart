@@ -4,79 +4,79 @@ import 'package:frontend/features/history/domain/entities/video.dart';
 /// 
 /// APIレスポンスとドメインエンティティ間のマッピングを担当します。
 class VideoDTO {
-  /// 動画ID
+  /// 動画ID（API: id）
   final String id;
 
-  /// 関連するインシデントID
+  /// 関連するインシデントID（API: incidentId）
   final String incidentId;
 
-  /// ファイル名
-  final String fileName;
+  /// ファイルURL（API: fileUrl）
+  final String fileUrl;
 
-  /// ファイルサイズ（バイト）
-  final int fileSize;
-
-  /// 動画の長さ（秒）
-  final int duration;
-
-  /// 録画日時
-  final DateTime recordedAt;
-
-  /// 動画URL
-  final String url;
-
-  /// サムネイルURL（オプション）
+  /// サムネイルURL（API: thumbnailUrl）
   final String? thumbnailUrl;
+
+  /// モザイク処理フラグ（API: mosaic）
+  final bool mosaic;
+
+  /// 録画開始時刻（API: spanStart）
+  final DateTime spanStart;
+
+  /// 録画終了時刻（API: spanEnd）
+  final DateTime spanEnd;
 
   const VideoDTO({
     required this.id,
     required this.incidentId,
-    required this.fileName,
-    required this.fileSize,
-    required this.duration,
-    required this.recordedAt,
-    required this.url,
+    required this.fileUrl,
     this.thumbnailUrl,
+    required this.mosaic,
+    required this.spanStart,
+    required this.spanEnd,
   });
 
-  /// JSONからVideoDTOを生成
+  /// JSONからVideoDTOを生成（API仕様書に基づく）
   factory VideoDTO.fromJson(Map<String, dynamic> json) {
     return VideoDTO(
       id: json['id'] as String,
-      incidentId: json['incident_id'] as String,
-      fileName: json['file_name'] as String,
-      fileSize: json['file_size'] as int,
-      duration: json['duration'] as int,
-      recordedAt: DateTime.parse(json['recorded_at'] as String),
-      url: json['url'] as String,
-      thumbnailUrl: json['thumbnail_url'] as String?,
+      incidentId: json['incidentId'] as String,
+      fileUrl: json['fileUrl'] as String,
+      thumbnailUrl: json['thumbnailUrl'] as String?,
+      mosaic: json['mosaic'] as bool? ?? false,
+      spanStart: DateTime.parse(json['spanStart'] as String),
+      spanEnd: DateTime.parse(json['spanEnd'] as String),
     );
   }
 
-  /// VideoDTOをJSONに変換
+  /// VideoDTOをJSONに変換（API仕様書に基づく）
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'incident_id': incidentId,
-      'file_name': fileName,
-      'file_size': fileSize,
-      'duration': duration,
-      'recorded_at': recordedAt.toIso8601String(),
-      'url': url,
-      'thumbnail_url': thumbnailUrl,
+      'incidentId': incidentId,
+      'fileUrl': fileUrl,
+      'thumbnailUrl': thumbnailUrl,
+      'mosaic': mosaic,
+      'spanStart': spanStart.toIso8601String(),
+      'spanEnd': spanEnd.toIso8601String(),
     };
   }
 
   /// DTOをドメインエンティティ (Video) に変換
   Video toEntity() {
+    // 動画の長さを秒単位で計算
+    final duration = spanEnd.difference(spanStart).inSeconds;
+    
+    // ファイル名をURLから抽出（または生成）
+    final fileName = fileUrl.split('/').last;
+    
     return Video(
       id: id,
       incidentId: incidentId,
       fileName: fileName,
-      fileSize: fileSize,
+      fileSize: 0, // API仕様書にファイルサイズがないため0とする
       duration: duration,
-      recordedAt: recordedAt,
-      url: url,
+      recordedAt: spanStart,
+      url: fileUrl,
       thumbnailUrl: thumbnailUrl,
     );
   }

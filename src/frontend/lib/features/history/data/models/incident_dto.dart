@@ -8,47 +8,55 @@ class IncidentDTO {
   /// インシデントID
   final String id;
 
-  /// インシデント番号（表示用）
-  final String incidentId;
-
-  /// 検知日時
+  /// 検知日時（API: detectedAt）
   final DateTime detectedAt;
 
-  /// 部屋番号
-  final String roomNumber;
+  /// 異常検出動作（API: type）
+  final String type;
 
-  /// ベッド番号
-  final String bedNumber;
-
-  /// 見守り対象者名
-  final String residentName;
-
-  /// 異常検出動作
-  final String detectionType;
-
-  /// ステータス
+  /// ステータス（API: status）
   final String status;
 
-  /// 対応履歴リスト
+  /// 対象者ID（API: personId）
+  final String? personId;
+
+  /// カメラID（API: cameraId）
+  final String? cameraId;
+
+  /// 部屋ID（API: roomId）
+  final String? roomId;
+
+  /// 検知エリアID（API: detectionAreaId）
+  final String? detectionAreaId;
+
+  /// 説明（API: description）
+  final String? description;
+
+  /// 対応履歴リスト（API: actions）
   final List<ActionDTO> actions;
 
-  /// 関連動画ID（オプション）
-  final String? videoId;
+  /// 関連通知リスト（API: notifications）
+  final List<dynamic>? notifications;
+
+  /// 関連動画リスト（API: videos）
+  final List<dynamic>? videos;
 
   const IncidentDTO({
     required this.id,
-    required this.incidentId,
     required this.detectedAt,
-    required this.roomNumber,
-    required this.bedNumber,
-    required this.residentName,
-    required this.detectionType,
+    required this.type,
     required this.status,
+    this.personId,
+    this.cameraId,
+    this.roomId,
+    this.detectionAreaId,
+    this.description,
     required this.actions,
-    this.videoId,
+    this.notifications,
+    this.videos,
   });
 
-  /// JSONからIncidentDTOを生成
+  /// JSONからIncidentDTOを生成（API仕様書に基づく）
   factory IncidentDTO.fromJson(Map<String, dynamic> json) {
     final actionsList = json['actions'] as List<dynamic>? ?? [];
     final actions = actionsList
@@ -57,58 +65,78 @@ class IncidentDTO {
 
     return IncidentDTO(
       id: json['id'] as String,
-      incidentId: json['incident_id'] as String,
-      detectedAt: DateTime.parse(json['detected_at'] as String),
-      roomNumber: json['room_number'] as String,
-      bedNumber: json['bed_number'] as String,
-      residentName: json['resident_name'] as String,
-      detectionType: json['detection_type'] as String,
+      detectedAt: DateTime.parse(json['detectedAt'] as String),
+      type: json['type'] as String,
       status: json['status'] as String,
+      personId: json['personId'] as String?,
+      cameraId: json['cameraId'] as String?,
+      roomId: json['roomId'] as String?,
+      detectionAreaId: json['detectionAreaId'] as String?,
+      description: json['description'] as String?,
       actions: actions,
-      videoId: json['video_id'] as String?,
+      notifications: json['notifications'] as List<dynamic>?,
+      videos: json['videos'] as List<dynamic>?,
     );
   }
 
-  /// IncidentDTOをJSONに変換
+  /// IncidentDTOをJSONに変換（API仕様書に基づく）
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'incident_id': incidentId,
-      'detected_at': detectedAt.toIso8601String(),
-      'room_number': roomNumber,
-      'bed_number': bedNumber,
-      'resident_name': residentName,
-      'detection_type': detectionType,
+      'detectedAt': detectedAt.toIso8601String(),
+      'type': type,
       'status': status,
+      'personId': personId,
+      'cameraId': cameraId,
+      'roomId': roomId,
+      'detectionAreaId': detectionAreaId,
+      'description': description,
       'actions': actions.map((action) => action.toJson()).toList(),
-      'video_id': videoId,
+      'notifications': notifications,
+      'videos': videos,
     };
   }
 
   /// DTOをドメインエンティティ (Incident) に変換
   Incident toEntity() {
+    // actionsから最新のものを取得して表示用データを構築
+    String roomNumber = roomId ?? '';
+    String bedNumber = '';
+    String residentName = '';
+    
+    if (actions.isNotEmpty) {
+      final latestAction = actions.first;
+      roomNumber = latestAction.roomBedNameOrNumber ?? roomNumber;
+      residentName = latestAction.personName ?? residentName;
+    }
+
+    // 動画IDの取得（最初の動画がある場合）
+    String? videoId;
+    if (videos != null && videos!.isNotEmpty) {
+      final firstVideo = videos!.first as Map<String, dynamic>;
+      videoId = firstVideo['id'] as String?;
+    }
+
     return Incident(
       id: id,
-      incidentId: incidentId,
+      incidentId: id, // API仕様書にincidentIdフィールドがないため、idを使用
       detectedAt: detectedAt,
       roomNumber: roomNumber,
       bedNumber: bedNumber,
       residentName: residentName,
-      detectionType: detectionType,
+      detectionType: type,
       status: _stringToStatus(status),
       actions: actions.map((actionDto) => actionDto.toEntity()).toList(),
       videoId: videoId,
     );
   }
 
-  /// ステータス文字列をIncidentStatus enumに変換
+  /// ステータス文字列をIncidentStatus enumに変換（API仕様書の値に対応）
   static IncidentStatus _stringToStatus(String status) {
     switch (status) {
-      case 'detected':
+      case 'open':
         return IncidentStatus.detected;
-      case 'confirmed':
-        return IncidentStatus.confirmed;
-      case 'in_progress':
+      case 'monitoring':
         return IncidentStatus.inProgress;
       case 'resolved':
         return IncidentStatus.resolved;
