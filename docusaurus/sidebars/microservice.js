@@ -30,6 +30,18 @@ module.exports = [
       'microservice/design/microservice-api-list',
       'microservice/design/microservice-swagger',
       'microservice/design/feature-api-1',
+      // Sample Backend 実装ベースドキュメント
+      'microservice/design/api-list-sample-backend',
+      'microservice/design/sample-backend-openapi-spec',
+    ],
+  },
+  {
+    type: 'category',
+    label: '詳細設計',
+    key: 'microservice-detailed-design',
+    items: [
+      'microservice/design/sample-backend-physical-data-model',
+      'microservice/design/sample-backend-detailed-functional-design',
     ],
   },
   {
