@@ -26,6 +26,7 @@ module.exports = [
     items: [
       'frontend/screen-design/view-screen',
       'frontend/screen-design/history-screen',
+      'frontend/screen-design/reversed/view-screen-detected-list',
     ],
   },
   {
