@@ -1,0 +1,1532 @@
+openapi: 3.0.3
+info:
+  title: Sample Backend API
+  description: 異常検知・通知システムのバックエンドAPI仕様書（sample-project/backend実装ベース）
+  version: 2.0.0
+  contact:
+    name: API Support
+    email: api-support@example.com
+
+servers:
+  - url: http://localhost:8080/api/v2
+    description: Local development server
+  - url: https://api.example.com/api/v2
+    description: Production server
+
+tags:
+  - name: Incidents
+    description: 異常イベント管理
+  - name: Actions
+    description: 対応履歴管理
+  - name: Videos
+    description: 異常動画管理
+  - name: Notifications
+    description: 通知管理
+  - name: Persons
+    description: 監視対象者管理
+  - name: Staffs
+    description: スタッフ管理
+  - name: Rooms
+    description: 居室管理
+  - name: Camera Devices
+    description: カメラデバイス管理
+  - name: Detection Areas
+    description: 検知エリア管理
+  - name: Audit Logs
+    description: 監査ログ管理
+  - name: Configuration
+    description: システム設定管理
+
+paths:
+  /incidents:
+    get:
+      tags:
+        - Incidents
+      summary: 異常イベント一覧取得
+      operationId: getIncidents
+      parameters:
+        - name: personId
+          in: query
+          description: 監視対象者ID
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          description: ステータス
+          schema:
+            type: string
+            enum: [open, in_progress, resolved, closed]
+        - name: from
+          in: query
+          description: 開始日時（RFC3339形式）
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          description: 終了日時（RFC3339形式）
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Incident'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - Incidents
+      summary: 異常イベント新規登録
+      operationId: createIncident
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentCreate'
+      responses:
+        '201':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Incident'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /incidents/{id}:
+    get:
+      tags:
+        - Incidents
+      summary: 異常イベント詳細取得
+      operationId: getIncident
+      parameters:
+        - $ref: '#/components/parameters/IncidentId'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Incident'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    patch:
+      tags:
+        - Incidents
+      summary: 異常イベント更新
+      operationId: updateIncident
+      parameters:
+        - $ref: '#/components/parameters/IncidentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentUpdate'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Incident'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /incidents/{id}/alert:
+    patch:
+      tags:
+        - Incidents
+      summary: アラート状態切り替え
+      operationId: toggleAlertStatus
+      parameters:
+        - $ref: '#/components/parameters/IncidentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - isActive
+              properties:
+                isActive:
+                  type: boolean
+                  description: アラート有効/無効
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Incident'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /incidents/{id}/actions:
+    get:
+      tags:
+        - Actions
+      summary: 異常イベントの対応履歴取得
+      operationId: getActionsByIncident
+      parameters:
+        - $ref: '#/components/parameters/IncidentId'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ActionWithDetails'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - Actions
+      summary: 対応履歴新規登録
+      operationId: createAction
+      parameters:
+        - $ref: '#/components/parameters/IncidentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActionCreate'
+      responses:
+        '201':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Action'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /incidents/{id}/videos:
+    get:
+      tags:
+        - Videos
+      summary: 異常イベントの動画一覧取得
+      operationId: getIncidentVideos
+      parameters:
+        - $ref: '#/components/parameters/IncidentId'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IncidentVideo'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /videos/{id}/file:
+    get:
+      tags:
+        - Videos
+      summary: 動画ファイル取得（リダイレクト）
+      operationId: getVideoFile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '302':
+          description: 動画ファイルへのリダイレクト
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /notifications:
+    get:
+      tags:
+        - Notifications
+      summary: 通知一覧取得
+      operationId: getNotifications
+      parameters:
+        - name: staffId
+          in: query
+          description: スタッフID
+          schema:
+            type: string
+            format: uuid
+        - name: incidentId
+          in: query
+          description: 異常イベントID
+          schema:
+            type: string
+            format: uuid
+        - name: unreadOnly
+          in: query
+          description: 未読のみ取得
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - Notifications
+      summary: 通知新規作成
+      operationId: createNotification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationCreate'
+      responses:
+        '201':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Notification'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /notifications/{id}/mark-read:
+    post:
+      tags:
+        - Notifications
+      summary: 通知を既読にする
+      operationId: markNotificationAsRead
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - staffId
+              properties:
+                staffId:
+                  type: string
+                  format: uuid
+                  description: スタッフID
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /notifications/{id}/escalate:
+    post:
+      tags:
+        - Notifications
+      summary: 通知をエスカレーション
+      operationId: escalateNotification
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /persons:
+    get:
+      tags:
+        - Persons
+      summary: 監視対象者一覧取得
+      operationId: getPersons
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Person'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - Persons
+      summary: 監視対象者新規登録
+      operationId: createPerson
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonCreate'
+      responses:
+        '201':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Person'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /persons/{id}:
+    get:
+      tags:
+        - Persons
+      summary: 監視対象者詳細取得
+      operationId: getPerson
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Person'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    patch:
+      tags:
+        - Persons
+      summary: 監視対象者情報更新
+      operationId: updatePerson
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonUpdate'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Person'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      tags:
+        - Persons
+      summary: 監視対象者削除
+      operationId: deletePerson
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 削除成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /staffs:
+    get:
+      tags:
+        - Staffs
+      summary: スタッフ一覧取得
+      operationId: getStaffs
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Staff'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /staffs/{id}:
+    get:
+      tags:
+        - Staffs
+      summary: スタッフ詳細取得
+      operationId: getStaff
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Staff'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /departments:
+    get:
+      tags:
+        - Staffs
+      summary: 部署一覧取得
+      operationId: getDepartments
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Department'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /rooms:
+    get:
+      tags:
+        - Rooms
+      summary: 居室一覧取得
+      operationId: getRooms
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Room'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /rooms/{id}:
+    get:
+      tags:
+        - Rooms
+      summary: 居室詳細取得
+      operationId: getRoom
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Room'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /camera-devices:
+    get:
+      tags:
+        - Camera Devices
+      summary: カメラデバイス一覧取得
+      operationId: getCameraDevices
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CameraDevice'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /camera-devices/{id}:
+    get:
+      tags:
+        - Camera Devices
+      summary: カメラデバイス詳細取得
+      operationId: getCameraDevice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CameraDevice'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /detection-areas:
+    get:
+      tags:
+        - Detection Areas
+      summary: 検知エリア一覧取得
+      operationId: getDetectionAreas
+      parameters:
+        - name: cameraId
+          in: query
+          description: カメラデバイスID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DetectionArea'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /audit-logs:
+    get:
+      tags:
+        - Audit Logs
+      summary: 監査ログ一覧取得
+      operationId: getAuditLogs
+      parameters:
+        - name: targetType
+          in: query
+          description: 対象タイプ
+          schema:
+            type: string
+        - name: userId
+          in: query
+          description: ユーザーID
+          schema:
+            type: string
+            format: uuid
+        - name: operation
+          in: query
+          description: 操作種別
+          schema:
+            type: string
+        - name: from
+          in: query
+          description: 開始日時（RFC3339形式）
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          description: 終了日時（RFC3339形式）
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuditLog'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /configurations:
+    get:
+      tags:
+        - Configuration
+      summary: システム設定取得
+      operationId: getConfiguration
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Configuration'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    patch:
+      tags:
+        - Configuration
+      summary: システム設定更新
+      operationId: updateConfiguration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurationUpdate'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Configuration'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  parameters:
+    IncidentId:
+      name: id
+      in: path
+      required: true
+      description: 異常イベントID
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    # Request Bodies
+    IncidentCreate:
+      type: object
+      required:
+        - detectedAt
+        - type
+        - personId
+        - cameraId
+      properties:
+        detectedAt:
+          type: string
+          format: date-time
+          description: 検知日時
+        type:
+          type: string
+          description: 異常タイプ
+          enum: [fall, leave_bed, enter_restricted_area, other]
+        personId:
+          type: string
+          format: uuid
+          description: 監視対象者ID
+        cameraId:
+          type: string
+          format: uuid
+          description: カメラID
+        roomId:
+          type: string
+          format: uuid
+          nullable: true
+          description: 居室ID
+        detectionAreaId:
+          type: string
+          format: uuid
+          nullable: true
+          description: 検知エリアID
+        description:
+          type: string
+          nullable: true
+          description: 説明
+
+    IncidentUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [open, in_progress, resolved, closed]
+          description: ステータス
+        description:
+          type: string
+          description: 説明
+        detectionAreaId:
+          type: string
+          format: uuid
+          description: 検知エリアID
+
+    ActionCreate:
+      type: object
+      required:
+        - staffId
+        - actionType
+      properties:
+        staffId:
+          type: string
+          format: uuid
+          description: スタッフID
+        actionType:
+          type: string
+          description: 対応種別
+          enum: [respond, complete, escalate, note]
+        note:
+          type: string
+          nullable: true
+          description: メモ
+
+    NotificationCreate:
+      type: object
+      required:
+        - incidentId
+        - sentToStaffIds
+      properties:
+        incidentId:
+          type: string
+          format: uuid
+          description: 異常イベントID
+        sentToStaffIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: 送信先スタッフID配列
+        notificationType:
+          type: string
+          nullable: true
+          description: 通知タイプ
+          enum: [incident_detected, escalated, reminder]
+        deliveryRule:
+          type: string
+          nullable: true
+          description: 配信ルール
+        actionRequired:
+          type: boolean
+          nullable: true
+          description: 対応要否
+
+    PersonCreate:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: 氏名
+        kana:
+          type: string
+          nullable: true
+          description: カナ
+        birthday:
+          type: string
+          format: date
+          nullable: true
+          description: 生年月日
+        gender:
+          type: string
+          nullable: true
+          enum: [male, female, other, unknown]
+          description: 性別
+        roomId:
+          type: string
+          format: uuid
+          nullable: true
+          description: 居室ID
+        memo:
+          type: string
+          nullable: true
+          description: メモ
+
+    PersonUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 氏名
+        kana:
+          type: string
+          description: カナ
+        birthday:
+          type: string
+          format: date
+          description: 生年月日
+        gender:
+          type: string
+          enum: [male, female, other, unknown]
+          description: 性別
+        roomId:
+          type: string
+          format: uuid
+          description: 居室ID
+        memo:
+          type: string
+          description: メモ
+
+    ConfigurationUpdate:
+      type: object
+      properties:
+        aiSensitivity:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: AI検知感度
+        videoRetentionDays:
+          type: integer
+          minimum: 1
+          maximum: 365
+          description: 動画保存期間（日）
+        notificationEnabled:
+          type: boolean
+          description: 通知有効/無効
+
+    # Response Types
+    Incident:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        detectedAt:
+          type: string
+          format: date-time
+        type:
+          type: string
+        status:
+          type: string
+        personId:
+          type: string
+          format: uuid
+          nullable: true
+        cameraId:
+          type: string
+          format: uuid
+          nullable: true
+        roomId:
+          type: string
+          format: uuid
+          nullable: true
+        detectionAreaId:
+          type: string
+          format: uuid
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        createdBy:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        personName:
+          type: string
+          nullable: true
+        roomNumber:
+          type: string
+          nullable: true
+        assignedTo:
+          type: string
+          nullable: true
+        actionType:
+          type: string
+          nullable: true
+        responseStartedAt:
+          type: string
+          format: date-time
+          nullable: true
+        responseCompletedAt:
+          type: string
+          format: date-time
+          nullable: true
+        isAlertActive:
+          type: boolean
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+        videos:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncidentVideo'
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        incidentId:
+          type: string
+          format: uuid
+        sentToStaffIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        deliveryRule:
+          type: string
+          nullable: true
+        sentAt:
+          type: string
+          format: date-time
+        notificationType:
+          type: string
+          nullable: true
+        actionRequired:
+          type: boolean
+        unreadByStaffIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        escalated:
+          type: boolean
+        notificationHistories:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationHistory'
+
+    NotificationHistory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        notificationId:
+          type: string
+          format: uuid
+        staffId:
+          type: string
+          format: uuid
+        read:
+          type: boolean
+        readAt:
+          type: string
+          format: date-time
+          nullable: true
+        escalated:
+          type: boolean
+        escalatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    Action:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        incidentId:
+          type: string
+          format: uuid
+        staffId:
+          type: string
+          format: uuid
+        actionType:
+          type: string
+        progress:
+          type: string
+        startAt:
+          type: string
+          format: date-time
+        endAt:
+          type: string
+          format: date-time
+          nullable: true
+        note:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    ActionWithDetails:
+      allOf:
+        - $ref: '#/components/schemas/Action'
+        - type: object
+          properties:
+            roomBedNameOrNumber:
+              type: string
+            personName:
+              type: string
+            incidentDetectionType:
+              type: string
+
+    Person:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        kana:
+          type: string
+          nullable: true
+        birthday:
+          type: string
+          format: date
+          nullable: true
+        gender:
+          type: string
+        roomId:
+          type: string
+          format: uuid
+          nullable: true
+        memo:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Staff:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        role:
+          type: string
+        departmentId:
+          type: string
+          format: uuid
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        departmentName:
+          type: string
+          nullable: true
+
+    Department:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+
+    Room:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        roomNumber:
+          type: string
+        floor:
+          type: integer
+        building:
+          type: string
+          nullable: true
+        capacity:
+          type: integer
+        occupants:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+
+    CameraDevice:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        deviceName:
+          type: string
+        roomId:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          enum: [active, inactive, maintenance]
+        ipAddress:
+          type: string
+          nullable: true
+        roomNumber:
+          type: string
+          nullable: true
+
+    DetectionArea:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        areaName:
+          type: string
+        cameraId:
+          type: string
+          format: uuid
+        coordinates:
+          type: object
+          properties:
+            x1:
+              type: integer
+            y1:
+              type: integer
+            x2:
+              type: integer
+            y2:
+              type: integer
+        areaType:
+          type: string
+          enum: [bed, door, restricted, common]
+
+    IncidentVideo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        incidentId:
+          type: string
+          format: uuid
+        videoType:
+          type: string
+          enum: [before, during, after]
+        fileUrl:
+          type: string
+          format: uri
+          nullable: true
+        thumbnailUrl:
+          type: string
+          format: uri
+          nullable: true
+        duration:
+          type: integer
+          description: 動画の長さ（秒）
+        createdAt:
+          type: string
+          format: date-time
+
+    AuditLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        targetType:
+          type: string
+          description: 対象エンティティタイプ
+        targetId:
+          type: string
+          format: uuid
+        operation:
+          type: string
+          enum: [create, read, update, delete]
+        userId:
+          type: string
+          format: uuid
+        changes:
+          type: object
+          description: 変更内容のJSON
+        createdAt:
+          type: string
+          format: date-time
+
+    Configuration:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        aiSensitivity:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        videoRetentionDays:
+          type: integer
+        notificationEnabled:
+          type: boolean
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+              description: エラーメッセージ
+            code:
+              type: string
+              description: エラーコード（オプション）
+
+  responses:
+    BadRequest:
+      description: リクエスト不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              message: "Invalid request body"
+              code: "BAD_REQUEST"
+
+    Unauthorized:
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              message: "Authentication required"
+              code: "UNAUTHORIZED"
+
+    Forbidden:
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              message: "Insufficient permissions"
+              code: "FORBIDDEN"
+
+    NotFound:
+      description: リソース不存在
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              message: "Resource not found"
+              code: "NOT_FOUND"
+
+    InternalServerError:
+      description: サーバーエラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              message: "Internal server error"
+              code: "INTERNAL_ERROR"
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT Bearer token authentication
+
+# 現在は認証未実装のため、セキュリティは適用されていません
+# security:
+#   - BearerAuth: []

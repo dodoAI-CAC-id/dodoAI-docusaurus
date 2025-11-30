@@ -9,6 +9,7 @@ const specificationItems = [
   'specification/functional-requirement', 
   'specification/design-system', 
   'specification/conceptual-data-diagram',
+  'specification/conceptual-data-diagram-sample-backend',  // Sample Backend 概念データモデル
   'specification/non-function-requirement-overview',
   'specification/nfr-availability',
   'specification/nfr-performance-scalability',
